@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>shop47 - Setup Guide</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        .status-success { background-color: #28a745; }
+        .status-warning { background-color: #ffc107; }
+        .status-danger { background-color: #dc3545; }
+        .code-block {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-shop"></i> shop47 - Setup Guide
+            </a>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0"><i class="bi bi-gear"></i> System Status & Setup</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Current Status -->
+                        <div class="mb-4">
+                            <h5>🚀 Current Status</h5>
+                            <div class="list-group">
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><span class="status-indicator status-success"></span>Web Server</span>
+                                    <span class="badge bg-success">Running</span>
+                                </div>
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><span class="status-indicator status-success"></span>Frontend Interface</span>
+                                    <span class="badge bg-success">Available</span>
+                                </div>
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><span class="status-indicator status-danger"></span>Database Connection</span>
+                                    <span class="badge bg-danger">Not Connected</span>
+                                </div>
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><span class="status-indicator status-warning"></span>Full Functionality</span>
+                                    <span class="badge bg-warning">Requires Database</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Links -->
+                        <div class="mb-4">
+                            <h5>🔗 Quick Access</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <a href="/" class="btn btn-outline-primary w-100">
+                                        <i class="bi bi-house"></i> Main Store
+                                    </a>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <a href="/admin" class="btn btn-outline-secondary w-100">
+                                        <i class="bi bi-shield-lock"></i> Admin Panel
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- What's Working -->
+                        <div class="mb-4">
+                            <h5>✅ What's Working Right Now</h5>
+                            <ul class="list-unstyled">
+                                <li><i class="bi bi-check-circle text-success"></i> Frontend interface (store and admin panel)</li>
+                                <li><i class="bi bi-check-circle text-success"></i> Static content serving</li>
+                                <li><i class="bi bi-check-circle text-success"></i> Basic routing and navigation</li>
+                                <li><i class="bi bi-check-circle text-success"></i> Responsive design</li>
+                            </ul>
+                        </div>
+
+                        <!-- What Needs Database -->
+                        <div class="mb-4">
+                            <h5>❌ Requires Database Setup</h5>
+                            <ul class="list-unstyled">
+                                <li><i class="bi bi-x-circle text-danger"></i> Product catalog and management</li>
+                                <li><i class="bi bi-x-circle text-danger"></i> User authentication and orders</li>
+                                <li><i class="bi bi-x-circle text-danger"></i> Access link system</li>
+                                <li><i class="bi bi-x-circle text-danger"></i> Admin functionality</li>
+                            </ul>
+                        </div>
+
+                        <!-- Setup Instructions -->
+                        <div class="mb-4">
+                            <h5>🔧 Database Setup (Required for Full Functionality)</h5>
+                            
+                            <div class="accordion" id="setupAccordion">
+                                <!-- Step 1: Install MySQL -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#step1">
+                                            Step 1: Install MySQL
+                                        </button>
+                                    </h2>
+                                    <div id="step1" class="accordion-collapse collapse show" data-bs-parent="#setupAccordion">
+                                        <div class="accordion-body">
+                                            <div class="mb-3">
+                                                <strong>Windows (Chocolatey):</strong>
+                                                <div class="code-block">
+choco install mysql
+net start mysql80
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <strong>Windows (Manual):</strong>
+                                                <p>Download from <a href="https://dev.mysql.com/downloads/mysql/" target="_blank">MySQL Official Site</a></p>
+                                            </div>
+                                            <div class="mb-3">
+                                                <strong>macOS:</strong>
+                                                <div class="code-block">
+brew install mysql
+brew services start mysql
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <strong>Linux (Ubuntu/Debian):</strong>
+                                                <div class="code-block">
+sudo apt update
+sudo apt install mysql-server
+sudo systemctl start mysql
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Step 2: Create Database -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step2">
+                                            Step 2: Create Database & User
+                                        </button>
+                                    </h2>
+                                    <div id="step2" class="accordion-collapse collapse" data-bs-parent="#setupAccordion">
+                                        <div class="accordion-body">
+                                            <p>Connect to MySQL and run these commands:</p>
+                                            <div class="code-block">
+mysql -u root -p
+
+CREATE DATABASE neosafi_store CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'neosafi_user'@'localhost' IDENTIFIED BY 'secure_password_123';
+GRANT ALL PRIVILEGES ON neosafi_store.* TO 'neosafi_user'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Step 3: Import Schema -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step3">
+                                            Step 3: Import Database Schema
+                                        </button>
+                                    </h2>
+                                    <div id="step3" class="accordion-collapse collapse" data-bs-parent="#setupAccordion">
+                                        <div class="accordion-body">
+                                            <p>From the project directory, run:</p>
+                                            <div class="code-block">
+mysql -u neosafi_user -p neosafi_store < sql/neosafi_schema.sql
+                                            </div>
+                                            <div class="alert alert-info mt-3">
+                                                <i class="bi bi-info-circle"></i>
+                                                This will create all tables and insert sample data including the admin user.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Step 4: Configure Environment -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step4">
+                                            Step 4: Update Configuration
+                                        </button>
+                                    </h2>
+                                    <div id="step4" class="accordion-collapse collapse" data-bs-parent="#setupAccordion">
+                                        <div class="accordion-body">
+                                            <p>Edit the <code>.env</code> file with your database credentials:</p>
+                                            <div class="code-block">
+DB_HOST=localhost
+DB_USER=neosafi_user
+DB_PASSWORD=secure_password_123
+DB_NAME=neosafi_store
+DB_PORT=3306
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Step 5: Restart Server -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step5">
+                                            Step 5: Restart Server
+                                        </button>
+                                    </h2>
+                                    <div id="step5" class="accordion-collapse collapse" data-bs-parent="#setupAccordion">
+                                        <div class="accordion-body">
+                                            <p>Stop the current server (Ctrl+C) and restart:</p>
+                                            <div class="code-block">
+npm start
+                                            </div>
+                                            <div class="alert alert-success mt-3">
+                                                <i class="bi bi-check-circle"></i>
+                                                You should see "✅ Database connected successfully" in the console.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Default Credentials -->
+                        <div class="mb-4">
+                            <h5>🔑 Default Admin Credentials</h5>
+                            <div class="alert alert-warning">
+                                <strong>Email:</strong> admin@neosafi.com<br>
+                                <strong>Password:</strong> admin123<br>
+                                <small><i class="bi bi-exclamation-triangle"></i> Change these credentials in production!</small>
+                            </div>
+                        </div>
+
+                        <!-- Testing -->
+                        <div class="mb-4">
+                            <h5>🧪 Testing the System</h5>
+                            <ol>
+                                <li>Login to the admin panel with the credentials above</li>
+                                <li>Go to "Access Links" section</li>
+                                <li>Generate a new access link</li>
+                                <li>Copy the generated link and open in a different browser</li>
+                                <li>Verify the unique link system works</li>
+                                <li>Test product management and order creation</li>
+                            </ol>
+                        </div>
+
+                        <!-- Troubleshooting -->
+                        <div class="mb-4">
+                            <h5>🔍 Common Issues</h5>
+                            <div class="accordion" id="troubleshootingAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#issue1">
+                                            Database Connection Failed
+                                        </button>
+                                    </h2>
+                                    <div id="issue1" class="accordion-collapse collapse" data-bs-parent="#troubleshootingAccordion">
+                                        <div class="accordion-body">
+                                            <ul>
+                                                <li>Make sure MySQL service is running</li>
+                                                <li>Check username/password in .env file</li>
+                                                <li>Verify database exists: <code>SHOW DATABASES;</code></li>
+                                                <li>Test connection manually: <code>mysql -u neosafi_user -p</code></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#issue2">
+                                            Port Already in Use
+                                        </button>
+                                    </h2>
+                                    <div id="issue2" class="accordion-collapse collapse" data-bs-parent="#troubleshootingAccordion">
+                                        <div class="accordion-body">
+                                            <div class="code-block">
+# Find process using port 3000
+netstat -ano | findstr :3000
+
+# Kill the process (Windows)
+taskkill /PID &lt;PID&gt; /F
+
+# Or use different port
+PORT=3001 npm start
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="text-center">
+                            <a href="/" class="btn btn-primary me-2">
+                                <i class="bi bi-house"></i> Go to Store
+                            </a>
+                            <a href="/admin" class="btn btn-secondary">
+                                <i class="bi bi-shield-lock"></i> Admin Panel
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

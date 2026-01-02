@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug - Navbar Dropdown</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">🔍 Debug - Navbar Dropdown</h2>
+        
+        <!-- Test Navbar -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Test Navbar Dropdown</h5>
+            </div>
+            <div class="card-body">
+                <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                    <div class="container">
+                        <a class="navbar-brand fw-bold" href="/">
+                            <i class="bi bi-shop"></i> shop47
+                        </a>
+                        
+                        <div class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-tags"></i> Catégories
+                                </a>
+                                <ul class="dropdown-menu" id="testCategoriesDropdown">
+                                    <li><a class="dropdown-item" href="#" onclick="testClick('Tous les produits')">
+                                        <i class="bi bi-grid" style="font-size: 1.2rem; margin-right: 0.5rem; color: #1ee98a;"></i>
+                                        Tous les produits
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <!-- Categories will be loaded here -->
+                                </ul>
+                            </li>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        
+        <!-- Diagnostics -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Diagnostics</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <button class="btn btn-primary w-100 mb-2" onclick="checkBootstrap()">
+                            <i class="bi bi-check-circle"></i> Vérifier Bootstrap
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-success w-100 mb-2" onclick="checkCategories()">
+                            <i class="bi bi-list"></i> Vérifier Catégories
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-warning w-100 mb-2" onclick="runMigration()">
+                            <i class="bi bi-database"></i> Créer Catégories
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Résultats -->
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Résultats</h5>
+            </div>
+            <div class="card-body">
+                <div id="results" style="height: 400px; overflow-y: auto; font-family: monospace; font-size: 0.9rem; background: #f8f9fa; padding: 1rem; border-radius: 5px;">
+                    <div class="text-muted">Prêt pour les diagnostics...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const results = document.getElementById('results');
+            const colorClass = type === 'error' ? 'text-danger' : type === 'success' ? 'text-success' : type === 'warning' ? 'text-warning' : 'text-info';
+            
+            results.innerHTML += `<div class="${colorClass}">[${timestamp}] ${message}</div>`;
+            results.scrollTop = results.scrollHeight;
+        }
+        
+        function testClick(categoryName) {
+            log(`✅ Clic détecté sur: ${categoryName}`, 'success');
+        }
+        
+        function checkBootstrap() {
+            log('🔍 Vérification de Bootstrap...', 'info');
+            
+            // Vérifier si Bootstrap est chargé
+            if (typeof bootstrap !== 'undefined') {
+                log('✅ Bootstrap JS est chargé', 'success');
+                log(`📦 Version Bootstrap: ${bootstrap.Tooltip.VERSION || 'Inconnue'}`, 'info');
+            } else {
+                log('❌ Bootstrap JS n\'est pas chargé', 'error');
+            }
+            
+            // Vérifier les classes CSS Bootstrap
+            const testElement = document.createElement('div');
+            testElement.className = 'dropdown-menu';
+            document.body.appendChild(testElement);
+            const styles = window.getComputedStyle(testElement);
+            
+            if (styles.position === 'absolute') {
+                log('✅ Bootstrap CSS est chargé', 'success');
+            } else {
+                log('❌ Bootstrap CSS n\'est pas chargé correctement', 'error');
+            }
+            
+            document.body.removeChild(testElement);
+            
+            // Test du dropdown
+            const dropdown = document.querySelector('[data-bs-toggle="dropdown"]');
+            if (dropdown) {
+                log('✅ Élément dropdown trouvé', 'success');
+                
+                // Tester l'événement click
+                dropdown.addEventListener('click', function() {
+                    log('✅ Événement click du dropdown détecté', 'success');
+                });
+            } else {
+                log('❌ Élément dropdown non trouvé', 'error');
+            }
+        }
+        
+        async function checkCategories() {
+            log('🔍 Vérification des catégories...', 'info');
+            
+            try {
+                const response = await fetch('/api/categories');
+                const data = await response.json();
+                
+                if (data.success) {
+                    log(`✅ API catégories fonctionne`, 'success');
+                    log(`📊 ${data.categories.length} catégories trouvées`, 'info');
+                    
+                    if (data.categories.length === 0) {
+                        log('⚠️ Aucune catégorie dans la base de données', 'warning');
+                        log('💡 Cliquez sur "Créer Catégories" pour les ajouter', 'info');
+                    } else {
+                        // Afficher les catégories
+                        data.categories.forEach(cat => {
+                            log(`📂 ${cat.name} (ID: ${cat.id}) - ${cat.icon}`, 'info');
+                        });
+                        
+                        // Mettre à jour le dropdown de test
+                        updateTestDropdown(data.categories);
+                    }
+                } else {
+                    log('❌ Erreur API: ' + data.message, 'error');
+                }
+            } catch (error) {
+                log('❌ Erreur réseau: ' + error.message, 'error');
+            }
+        }
+        
+        function updateTestDropdown(categories) {
+            const dropdown = document.getElementById('testCategoriesDropdown');
+            const categoriesHtml = categories.map(category => 
+                `<li><a class="dropdown-item" href="#" onclick="testClick('${category.name}')">
+                    <i class="${category.icon}" style="font-size: 1.2rem; margin-right: 0.5rem; color: #1ee98a;"></i>
+                    ${category.name}
+                </a></li>`
+            ).join('');
+            
+            // Garder "Tous les produits" et ajouter les catégories
+            const currentContent = dropdown.innerHTML;
+            const dividerIndex = currentContent.indexOf('<li><hr class="dropdown-divider"></li>');
+            if (dividerIndex !== -1) {
+                const beforeDivider = currentContent.substring(0, dividerIndex + '<li><hr class="dropdown-divider"></li>'.length);
+                dropdown.innerHTML = beforeDivider + categoriesHtml;
+            }
+            
+            log('✅ Dropdown de test mis à jour', 'success');
+        }
+        
+        async function runMigration() {
+            log('🔄 Exécution de la migration...', 'info');
+            
+            try {
+                const response = await fetch('/api/migrate-categories', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    log('✅ Migration réussie!', 'success');
+                    log(`📊 ${data.categories.length} catégories créées`, 'success');
+                    
+                    // Recharger les catégories
+                    setTimeout(() => {
+                        checkCategories();
+                    }, 1000);
+                } else {
+                    log('❌ Erreur migration: ' + data.message, 'error');
+                }
+            } catch (error) {
+                log('❌ Erreur réseau: ' + error.message, 'error');
+            }
+        }
+        
+        // Tests automatiques au chargement
+        window.addEventListener('load', function() {
+            log('🚀 Page de debug chargée', 'success');
+            log('📋 Étapes de diagnostic:', 'info');
+            log('1. Vérifier Bootstrap', 'info');
+            log('2. Vérifier les catégories', 'info');
+            log('3. Si pas de catégories, les créer', 'info');
+            log('4. Tester le dropdown', 'info');
+            
+            // Auto-check Bootstrap
+            setTimeout(checkBootstrap, 500);
+            setTimeout(checkCategories, 1000);
+        });
+    </script>
+</body>
+</html>

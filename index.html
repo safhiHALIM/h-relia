@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabrima - Soins & Beauté au Féminin</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/public/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="bi bi-flower1"></i> Tabrima
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPage('home')">
+                            <i class="bi bi-house"></i> Accueil
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-tags"></i> Catégories
+                        </a>
+                        <ul class="dropdown-menu modern-dropdown" id="categoriesDropdown">
+                            <!-- Categories will be loaded here -->
+                        </ul>
+                    </li>
+                </ul>
+                
+                <!-- Barre de recherche moderne -->
+                <div class="search-container mx-3">
+                    <div class="search-wrapper">
+                        <input type="text" 
+                               class="form-control search-input" 
+                               id="searchInput" 
+                               placeholder="Rechercher des produits..." 
+                               autocomplete="off">
+                        <button class="search-btn" type="button" onclick="performSearch()">
+                            <i class="bi bi-search"></i>
+                        </button>
+                        <div class="search-suggestions" id="searchSuggestions"></div>
+                    </div>
+                </div>
+                
+                <div class="navbar-nav">
+                    <div class="nav-item">
+                        <button class="btn btn-outline-light position-relative cart-btn" onclick="showCartModal()">
+                            <i class="bi bi-cart3"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count" id="cartBadge">
+                                0
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    
+
+    
+
+    <!-- Main Content -->
+    <main id="mainContent">
+        <!-- Home Page -->
+        <div id="homePage" class="page">
+            <!-- Hero Section Moderne -->
+            <section class="hero-section">
+                <div class="particles">
+                    <div class="particle" style="left: 10%; animation-delay: 0s; width: 4px; height: 4px;"></div>
+                    <div class="particle" style="left: 20%; animation-delay: 1s; width: 6px; height: 6px;"></div>
+                    <div class="particle" style="left: 30%; animation-delay: 2s; width: 3px; height: 3px;"></div>
+                    <div class="particle" style="left: 40%; animation-delay: 0.5s; width: 5px; height: 5px;"></div>
+                    <div class="particle" style="left: 50%; animation-delay: 1.5s; width: 4px; height: 4px;"></div>
+                    <div class="particle" style="left: 60%; animation-delay: 2.5s; width: 6px; height: 6px;"></div>
+                    <div class="particle" style="left: 70%; animation-delay: 0.8s; width: 3px; height: 3px;"></div>
+                    <div class="particle" style="left: 80%; animation-delay: 1.8s; width: 5px; height: 5px;"></div>
+                    <div class="particle" style="left: 90%; animation-delay: 2.2s; width: 4px; height: 4px;"></div>
+                </div>
+                <div class="container">
+                    <div class="row align-items-center min-vh-75">
+                        <div class="col-lg-6">
+                            <div class="hero-content">
+                                <h1 class="hero-title">
+                                    <span class="typing-effect">Tabrima</span>
+                                </h1>
+                                <p class="hero-subtitle">
+                                    ✨ Révélez votre éclat naturel avec nos soins corporels premium inspirés des rituels de beauté ancestraux
+                                </p>
+                                <div class="hero-buttons">
+                                    <button class="btn btn-primary btn-lg me-3" onclick="showPage('catalog')">
+                                        <i class="bi bi-magic"></i> Explorer la Collection
+                                    </button>
+                                    <button class="btn btn-outline-light btn-lg" onclick="scrollToSection('categories')">
+                                        <i class="bi bi-stars"></i> Nos Rituels
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="hero-image animate-on-scroll">
+                                <div class="floating-icons">
+                                    <div class="floating-icon" style="animation-delay: 0s;">🌿</div>
+                                    <div class="floating-icon" style="animation-delay: 0.5s;">🌸</div>
+                                    <div class="floating-icon" style="animation-delay: 1s;">✨</div>
+                                    <div class="floating-icon" style="animation-delay: 1.5s;">🧴</div>
+                                    <div class="floating-icon" style="animation-delay: 2s;">🧼</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            
+
+            <!-- Zencoder AI Assistant Section -->
+            <section class="zencoder-section py-5">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6 mb-4 mb-lg-0" data-aos="fade-right">
+                            <div class="zencoder-badge mb-3">
+                                <i class="bi bi-cpu"></i> AI Expertise by Zencoder
+                            </div>
+                            <h2 class="section-title mb-4">Votre Rituel Personnalisé par l'IA</h2>
+                            <p class="lead mb-4">Laissez l'intelligence de Zencoder analyser vos besoins pour créer une routine de soin sur mesure.</p>
+                            <div class="zencoder-features">
+                                <div class="feature-item d-flex mb-3">
+                                    <div class="feature-icon me-3">
+                                        <i class="bi bi-check2-circle text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-1">Analyse Cutanée Intelligente</h5>
+                                        <p class="text-muted small">Diagnostic précis basé sur vos préférences et votre type de peau.</p>
+                                    </div>
+                                </div>
+                                <div class="feature-item d-flex mb-3">
+                                    <div class="feature-icon me-3">
+                                        <i class="bi bi-check2-circle text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-1">Recommandations Prédictives</h5>
+                                        <p class="text-muted small">Anticipez les besoins de votre peau selon les saisons.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary mt-4">
+                                <i class="bi bi-magic"></i> Démarrer la Consultation IA
+                            </button>
+                        </div>
+                        <div class="col-lg-6" data-aos="fade-left">
+                            <div class="zencoder-card shadow-lg border-0 rounded-4 overflow-hidden">
+                                <div class="zencoder-header p-3 border-bottom d-flex align-items-center bg-white">
+                                    <div class="zencoder-dot me-2 bg-success rounded-circle" style="width: 10px; height: 10px;"></div>
+                                    <span class="fw-bold">Zencoder Assistant</span>
+                                </div>
+                                <div class="zencoder-body p-4 bg-light" style="min-height: 300px; background-color: #f8f9fa !important;">
+                                    <div class="message incoming mb-3 p-3 bg-white rounded-3 shadow-sm border" style="max-width: 85%;">
+                                        "Bonjour ! Je suis Zencoder, votre assistant beauté IA. Quelle est votre préoccupation principale aujourd'hui ?"
+                                    </div>
+                                    <div class="message outgoing mb-3 p-3 text-white rounded-3 shadow-sm ms-auto" style="max-width: 85%; background-color: var(--primary-color);">
+                                        "Je cherche une routine pour peau sensible et éclat."
+                                    </div>
+                                    <div class="message incoming mb-3 p-3 bg-white rounded-3 shadow-sm border" style="max-width: 85%;">
+                                        "Parfait. Basé sur mon analyse, je vous recommande le Rituel d'Orient à la Rose de Damas..."
+                                    </div>
+                                </div>
+                                <div class="zencoder-footer p-3 border-top bg-white d-flex align-items-center">
+                                    <div class="input-placeholder text-muted flex-grow-1">Tapez votre message ici...</div>
+                                    <i class="bi bi-send-fill text-primary ms-2" style="cursor: pointer; font-size: 1.2rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Catégories Électroniques -->
+            <section class="categories-section py-5">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <!-- Section Header -->
+                            <div class="section-header text-center mb-5">
+                                <div class="section-badge">
+                                    <i class="bi bi-lightning-charge-fill"></i>
+                                    <span>Découvrir</span>
+                                </div>
+                                <h2 class="section-title title-accent">Nos Rituels de Soin</h2>
+                                <p class="section-subtitle">Découvrez notre gamme exclusive pour une peau douce et sublimée</p>
+                                <div class="section-divider"></div>
+                            </div>
+                            
+                            <!-- Categories Grid -->
+                            <div class="categories-grid-container" id="categoriesGrid">
+                                <!-- Les catégories seront chargées ici dynamiquement -->
+                            </div>
+                        </div>
+                    </div>
+            </section>
+            
+            </div>
+        </div>
+
+        <!-- Catalog Page -->
+        <div id="catalogPage" class="page d-none">
+            <div class="container py-4">
+                <div class="row">
+                    <!-- Filters Sidebar -->
+                    <div class="col-lg-3 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Filtres</h5>
+                            </div>
+                            <div class="card-body">
+                                <!-- Category Filter -->
+                                <div class="mb-3">
+                                    <label class="form-label">Catégorie</label>
+                                    <select class="form-select" id="categoryFilter">
+                                        <option value="">Toutes les catégories</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Price Range -->
+                                <div class="mb-3">
+                                    <label class="form-label">Gamme de prix</label>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <input type="number" class="form-control" id="minPrice" placeholder="Min" min="0">
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="number" class="form-control" id="maxPrice" placeholder="Max" min="0">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <button class="btn btn-primary w-100" onclick="applyFilters()">Appliquer les filtres</button>
+                                <button class="btn btn-outline-secondary w-100 mt-2" onclick="clearFilters()">Effacer</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Products Grid -->
+                    <div class="col-lg-9">
+                        <!-- Search Results Info -->
+                        <div class="search-results-header mb-3" id="searchResultsHeader" style="display: none;">
+                            <div class="alert alert-info d-flex align-items-center">
+                                <i class="bi bi-search me-2"></i>
+                                <div class="flex-grow-1">
+                                    <strong class="search-results-info">Résultats de recherche</strong>
+                                    <button class="btn btn-sm btn-outline-secondary ms-2" onclick="clearSearchAndShowAll()">
+                                        <i class="bi bi-x"></i> Effacer la recherche
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Category Filter Info -->
+                        <div class="category-filter-header mb-3" id="categoryFilterHeader" style="display: none;">
+                            <div class="alert alert-success d-flex align-items-center">
+                                <i class="bi bi-tags me-2"></i>
+                                <div class="flex-grow-1">
+                                    <strong class="category-filter-info">Catégorie sélectionnée</strong>
+                                    <button class="btn btn-sm btn-outline-secondary ms-2" onclick="showAllProducts()">
+                                        <i class="bi bi-x"></i> Voir tous les produits
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <span id="productsCount">0</span> produits trouvés
+                            </div>
+                            <div>
+                                <select class="form-select" id="sortBy" onchange="applyFilters()">
+                                    <option value="created_at">Plus récents</option>
+                                    <option value="price_asc">Prix: Croissant</option>
+                                    <option value="price_desc">Prix: Décroissant</option>
+                                    <option value="name">Nom A-Z</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row" id="productsGrid">
+                            <!-- Products will be loaded here -->
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <nav aria-label="Products pagination" class="mt-4">
+                            <ul class="pagination justify-content-centered" id="pagination">
+                                <!-- Pagination will be loaded here -->
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Detail Page -->
+        <div id="productPage" class="page d-none">
+            <div class="container py-4">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="product-image-container">
+                            <!-- Image principale -->
+                            <div class="main-image-container mb-3">
+                                <img id="productMainImage" src="" alt="" class="img-fluid rounded main-product-image">
+                                <div class="image-zoom-overlay" onclick="openImageModal()">
+                                    <i class="bi bi-zoom-in"></i>
+                                </div>
+                            </div>
+                            
+                            <!-- Miniatures des images -->
+                            <div class="product-thumbnails" id="productThumbnails">
+                                <!-- Thumbnails will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="product-details">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="#" onclick="showPage('home')">Accueil</a></li>
+                                    <li class="breadcrumb-item"><a href="#" onclick="showPage('catalog')">Catalogue</a></li>
+                                    <li class="breadcrumb-item active" id="productBreadcrumb"></li>
+                                </ol>
+                            </nav>
+                            
+                            <h1 id="productName"></h1>
+                            <p class="text-muted mb-3" id="productCategory"></p>
+                            <h3 class="text-primary mb-3" id="productPrice"></h3>
+                            
+                            <div class="mb-3">
+                                <span class="badge bg-success" id="productStock"></span>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h5>Description</h5>
+                                <p id="productDescription"></p>
+                            </div>
+                            
+                            <!-- Quantity Selector -->
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold mb-2">
+                                    Quantité
+                                </label>
+                                <div class="quantity-selector d-flex align-items-center">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="decreaseQuantity()">
+                                        <i class="bi bi-dash"></i>
+                                    </button>
+                                    <input type="number" class="form-control mx-2 text-center" id="productQuantity" value="1" min="1">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="increaseQuantity()">
+                                        <i class="bi bi-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2 d-md-block">
+                                <button class="btn btn-primary btn-lg product-action-btn add-to-cart-btn" onclick="addToCart()">
+                                    <i class="bi bi-cart-plus"></i> Ajouter au panier
+                                </button>
+                                <button class="btn btn-outline-secondary btn-lg product-action-btn" onclick="addToWishlist()">
+                                    <i class="bi bi-heart"></i> Ajouter aux favoris
+                                </button>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <h5>Caractéristiques</h5>
+                                <ul class="list-unstyled" id="productFeatures">
+                                    <!-- Features will be loaded here -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart Page -->
+        <div id="cartPage" class="page d-none">
+            <div class="container py-4">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="bi bi-cart3"></i> Votre Panier</h5>
+                            </div>
+                            <div class="card-body" id="cartItems">
+                                <!-- Cart items will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Résumé</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Sous-total</span>
+                                    <strong id="cartSubtotal">0 €</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Frais de livraison</span>
+                                    <strong id="cartShipping">0 €</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Taxes</span>
+                                    <strong id="cartTaxes">0 €</strong>
+                                </div>
+                                <hr>
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span>Total</span>
+                                    <strong id="cartTotal">0 €</strong>
+                                </div>
+                                <button class="btn btn-primary w-100" onclick="proceedToCheckout()">
+                                    Procéder au paiement
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Checkout Page -->
+        <div id="checkoutPage" class="page d-none">
+            <div class="container py-4">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">Informations de livraison</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="checkoutForm" onsubmit="return submitCheckout(event)">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Nom</label>
+                                            <input type="text" class="form-control" name="firstName" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Prénom</label>
+                                            <input type="text" class="form-control" name="lastName" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Adresse</label>
+                                        <input type="text" class="form-control" name="address" required>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Ville</label>
+                                            <input type="text" class="form-control" name="city" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Code Postal</label>
+                                            <input type="text" class="form-control" name="zip" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Téléphone</label>
+                                        <input type="tel" class="form-control" name="phone" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-control" name="email" required>
+                                    </div>
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="bi bi-check-circle"></i> Confirmer la commande
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Résumé de la commande</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="checkoutSummary">
+                                    <!-- Summary will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer bg-dark text-white pt-5 pb-4">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-lg-4">
+                    <h5 class="fw-bold mb-3">shop47</h5>
+                    <p>Votre destination de confiance pour les produits électroniques de haute qualité. Nous sélectionnons les dernières innovations pour vous offrir une expérience d'achat exceptionnelle.</p>
+                    <div class="social-links">
+                        <a href="#" class="me-3"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="me-3"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="me-3"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="me-3"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <h5 class="fw-bold mb-3">Catégories</h5>
+                    <ul class="list-unstyled" id="footerCategories">
+                        <!-- Categories will be loaded here -->
+                    </ul>
+                </div>
+                <div class="col-lg-3">
+                    <h5 class="fw-bold mb-3">Service Client</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white text-decoration-none">FAQs</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Livraison</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Retours</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Support</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2">
+                    <h5 class="fw-bold mb-3">Contact</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-telephone"></i> +33 1 23 45 67 89</li>
+                        <li><i class="bi bi-envelope"></i> support@shop47.com</li>
+                        <li><i class="bi bi-geo-alt"></i> Paris, France</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="border-light my-4">
+            <div class="text-center">
+                <p class="mb-0">© <span id="currentYear"></span> shop47. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Modal -->
+    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cartModalLabel"><i class="bi bi-cart3"></i> Votre Panier</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="cartModalItems">
+b
+                        <!-- Cart items will be loaded here -->
+                    </div>
+                    <div class="cart-modal-footer mt-4">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">Continuer vos achats</button>
+                        <button class="btn btn-primary" onclick="showPage('checkout'); resetModals()">Passer au paiement</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">Agrandir l'image</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalImage" src="" alt="Image produit" class="img-fluid rounded">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1055;">
+        <div class="toast align-items-center text-bg-primary border-0" id="appToast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="toastMessage">
+                    <!-- Notifications apparaîtront ici -->
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Cart Icon -->
+    <div class="cart-float d-none" id="floatingCart" onclick="showCartModal()">
+        <i class="bi bi-cart3"></i>
+        <span class="cart-float-badge" id="floatingCartBadge">0</span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="/public/js/device.js"></script>
+    <script src="/public/js/app.js"></script>
+</body>
+</html>

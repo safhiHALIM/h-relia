@@ -1,0 +1,231 @@
+{
+  "project": {
+    "name": "NeoSafi Store",
+    "version": "1.0.0",
+    "description": "Modern e-commerce platform with unique single-use access link system",
+    "author": "NeoSafi Team",
+    "license": "MIT",
+    "repository": "https://github.com/neosafi/neosafi-store",
+    "created": "2024-01-01",
+    "stack": {
+      "backend": "Node.js + Express.js",
+      "database": "MySQL",
+      "frontend": "HTML5 + CSS3 + Bootstrap 5 + Vanilla JavaScript",
+      "security": "bcrypt + SHA256 + Rate Limiting"
+    }
+  },
+  "features": {
+    "customer": [
+      "Homepage with hero slider and featured products",
+      "Product catalog with pagination, search, and filters",
+      "Product detail pages with image gallery",
+      "Shopping cart and checkout system",
+      "User registration and login",
+      "Order history and tracking"
+    ],
+    "admin": [
+      "Admin dashboard with statistics",
+      "Product management (CRUD operations)",
+      "Order management and status updates",
+      "Access link generation and management",
+      "Image upload for products",
+      "Stock control and inventory"
+    ],
+    "access_links": [
+      "Single-use token generation",
+      "Device fingerprint locking",
+      "SHA256 secure token storage",
+      "Optional expiration times",
+      "Admin monitoring and revocation",
+      "Rate limiting protection"
+    ]
+  },
+  "database_schema": {
+    "tables": [
+      {
+        "name": "users",
+        "description": "Customer and admin accounts",
+        "key_fields": ["id", "email", "password", "role"]
+      },
+      {
+        "name": "categories",
+        "description": "Product categories",
+        "key_fields": ["id", "name", "description"]
+      },
+      {
+        "name": "products",
+        "description": "Product catalog",
+        "key_fields": ["id", "name", "price", "stock", "category_id", "featured"]
+      },
+      {
+        "name": "orders",
+        "description": "Customer orders",
+        "key_fields": ["id", "user_id", "total", "status", "customer_info"]
+      },
+      {
+        "name": "order_items",
+        "description": "Order line items",
+        "key_fields": ["id", "order_id", "product_id", "quantity", "price"]
+      },
+      {
+        "name": "access_links",
+        "description": "Unique access token system",
+        "key_fields": ["id", "token_hash", "used_by_device", "status", "expires_at"]
+      }
+    ]
+  },
+  "api_endpoints": {
+    "authentication": [
+      "POST /api/login - Customer login",
+      "POST /api/register - Customer registration",
+      "POST /api/admin/login - Admin login",
+      "POST /api/admin/logout - Admin logout",
+      "GET /api/admin/check - Check admin session"
+    ],
+    "products": [
+      "GET /api/products - Get products with pagination/filters",
+      "GET /api/products/:id - Get single product",
+      "GET /api/products/featured/list - Get featured products",
+      "POST /api/admin/products - Create product (admin)",
+      "PUT /api/admin/products/:id - Update product (admin)",
+      "DELETE /api/admin/products/:id - Delete product (admin)"
+    ],
+    "orders": [
+      "POST /api/orders - Create order",
+      "GET /api/orders - Get user orders",
+      "GET /api/admin/orders - Get all orders (admin)",
+      "PUT /api/admin/orders/:id/status - Update order status (admin)"
+    ],
+    "access_links": [
+      "POST /api/generate-link - Generate access link (admin)",
+      "POST /api/check-link - Verify access link",
+      "GET /api/admin/access-links - List access links (admin)",
+      "PUT /api/admin/access-links/:hash/revoke - Revoke link (admin)"
+    ],
+    "categories": [
+      "GET /api/categories - Get all categories"
+    ]
+  },
+  "environment_variables": {
+    "database": {
+      "DB_HOST": "Database host (default: localhost)",
+      "DB_USER": "Database username",
+      "DB_PASSWORD": "Database password",
+      "DB_NAME": "Database name (default: neosafi_store)",
+      "DB_PORT": "Database port (default: 3306)"
+    },
+    "server": {
+      "PORT": "Server port (default: 3000)",
+      "NODE_ENV": "Environment (development/production)"
+    },
+    "security": {
+      "SESSION_SECRET": "Session encryption secret",
+      "RATE_LIMIT_WINDOW_MS": "Rate limit window in milliseconds",
+      "RATE_LIMIT_MAX_REQUESTS": "Max requests per window"
+    },
+    "upload": {
+      "MAX_FILE_SIZE": "Maximum file upload size in bytes",
+      "UPLOAD_PATH": "File upload directory path"
+    }
+  },
+  "default_credentials": {
+    "admin": {
+      "email": "admin@neosafi.com",
+      "password": "admin123",
+      "note": "Change these credentials in production!"
+    }
+  },
+  "deployment": {
+    "local_development": [
+      "1. Install Node.js and MySQL",
+      "2. Clone repository and run 'npm install'",
+      "3. Create MySQL database and user",
+      "4. Import sql/neosafi_schema.sql",
+      "5. Copy .env.example to .env and configure",
+      "6. Run 'npm run dev' to start development server"
+    ],
+    "cpanel_hosting": [
+      "1. Upload files to public_html directory",
+      "2. Create MySQL database through cPanel",
+      "3. Import schema through phpMyAdmin",
+      "4. Configure .env with cPanel database credentials",
+      "5. Enable Node.js in cPanel (if supported)",
+      "6. Set startup file to server.js",
+      "7. Install dependencies and start application"
+    ],
+    "alternative_hosting": [
+      "VPS/Cloud: DigitalOcean, Linode, AWS EC2",
+      "PaaS: Heroku, Railway, Render",
+      "Shared with Node.js: A2 Hosting, InMotion, SiteGround"
+    ]
+  },
+  "security_features": {
+    "access_links": [
+      "SHA256 token hashing (raw tokens never stored)",
+      "Device fingerprinting for device locking",
+      "Single-use token enforcement",
+      "Optional time-based expiration",
+      "Rate limiting on sensitive endpoints",
+      "Admin monitoring and revocation capabilities"
+    ],
+    "general": [
+      "bcrypt password hashing with salt",
+      "Secure HTTP-only session cookies",
+      "Server-side input validation",
+      "Parameterized SQL queries",
+      "File upload type and size restrictions",
+      "HTTPS-ready configuration"
+    ]
+  },
+  "testing": {
+    "manual_curl_examples": [
+      "Admin login: curl -X POST /api/admin/login -d '{\"email\":\"admin@neosafi.com\",\"password\":\"admin123\"}'",
+      "Generate link: curl -X POST /api/generate-link -d '{\"expires_hours\":24}'",
+      "Check link: curl -X POST /api/check-link -d '{\"token\":\"TOKEN\",\"deviceId\":\"DEVICE_ID\"}'",
+      "Get products: curl /api/products",
+      "Get single product: curl /api/products/1"
+    ],
+    "automated_testing": [
+      "Run included test script: ./test_api.sh",
+      "Tests cover authentication, product CRUD, and access link flow"
+    ]
+  },
+  "file_structure": {
+    "config/": "Database and application configuration",
+    "public/": "Static frontend files (HTML, CSS, JS, images)",
+    "routes/": "Express.js API route handlers",
+    "sql/": "Database schema and sample data",
+    "server.js": "Main application entry point",
+    ".env.example": "Environment variables template",
+    "package.json": "Node.js dependencies and scripts"
+  },
+  "next_steps": {
+    "immediate": [
+      "Set up local development environment",
+      "Test all functionality thoroughly",
+      "Customize branding and styling",
+      "Configure production environment variables",
+      "Change default admin credentials"
+    ],
+    "short_term": [
+      "Integrate payment processing (Stripe/PayPal)",
+      "Add email notifications for orders",
+      "Implement advanced search functionality",
+      "Add customer reviews and ratings",
+      "Create mobile-responsive improvements"
+    ],
+    "long_term": [
+      "Multi-vendor marketplace features",
+      "Advanced analytics and reporting",
+      "Mobile app API development",
+      "Multi-language support",
+      "Advanced inventory management"
+    ]
+  },
+  "support": {
+    "documentation": "README.md and inline code comments",
+    "issues": "GitHub issues for bug reports and feature requests",
+    "email": "support@neosafi.com",
+    "community": "Join our Discord server for community support"
+  }
+}

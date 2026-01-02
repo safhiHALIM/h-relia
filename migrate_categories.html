@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Migration Catégories</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <!-- Floating Action Button -->
+    <button class="btn btn-primary btn-lg position-fixed bottom-0 end-0 m-3 rounded-circle shadow-lg" style="z-index: 1050; width: 60px; height: 60px;" data-bs-toggle="modal" data-bs-target="#migrationModal" title="Migration des Catégories">
+        <i class="bi bi-database-gear"></i>
+    </button>
+
+    <!-- Migration Modal -->
+    <div class="modal fade" id="migrationModal" tabindex="-1" aria-labelledby="migrationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h4 class="modal-title" id="migrationModalLabel"><i class="bi bi-database-gear"></i> Migration des Catégories</h4>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Cette page va ajouter la colonne <code>icon</code> à la table <code>categories</code> et créer les catégories électroniques avec leurs icônes.</p>
+                    
+                    <button id="migrateBtn" class="btn btn-success btn-lg" onclick="runMigration()">
+                        <i class="bi bi-play-circle"></i> Exécuter la Migration
+                    </button>
+                    
+                    <div id="result" class="mt-4"></div>
+                    
+                    <div id="categoriesList" class="mt-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function runMigration() {
+            const btn = document.getElementById('migrateBtn');
+            const result = document.getElementById('result');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Migration en cours...';
+            
+            try {
+                const response = await fetch('/api/migrate-categories', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    result.innerHTML = `
+                        <div class="alert alert-success">
+                            <i class="bi bi-check-circle"></i> ${data.message}
+                        </div>
+                    `;
+                    
+                    // Afficher les catégories
+                    displayCategories(data.categories);
+                    
+                } else {
+                    result.innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="bi bi-exclamation-triangle"></i> Erreur: ${data.message}
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                result.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle"></i> Erreur de connexion: ${error.message}
+                    </div>
+                `;
+            }
+            
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-check-circle"></i> Migration Terminée';
+        }
+        
+        function displayCategories(categories) {
+            const categoriesList = document.getElementById('categoriesList');
+            
+            let html = `
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-list"></i> Catégories Créées (${categories.length})</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+            `;
+            
+            categories.forEach(category => {
+                html += `
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex align-items-center p-3 border rounded">
+                            <div class="me-3">
+                                <i class="${category.icon}" style="font-size: 2rem; color: #1ee98a;"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">${category.name}</h6>
+                                <small class="text-muted">${category.description || 'Pas de description'}</small>
+                                <br>
+                                <code class="small">${category.icon}</code>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            categoriesList.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

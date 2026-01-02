@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabrima - Panneau d'Administration</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/public/css/style.css" rel="stylesheet">
+
+    <!-- Inline styles for a modern, colorful status combobox -->
+    <style>
+        /* Combobox de statut stylé */
+        .order-status-select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            border: 2px solid transparent;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.875rem;
+            border-radius: 20px; /* Plus arrondi */
+            padding: 0.5rem 2.5rem 0.5rem 1rem;
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+            background-size: 16px 16px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 140px; /* Largeur minimale pour éviter le saut */
+        }
+        
+        .order-status-select:hover { 
+            transform: translateY(-1px); 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); 
+        }
+        
+        .order-status-select:active { 
+            transform: translateY(0); 
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); 
+        }
+        
+        .order-status-select:focus { 
+            outline: none; 
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3), 0 2px 6px rgba(0, 0, 0, 0.1); 
+        }
+
+        /* Icône chevron moderne */
+        .order-status-select { 
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 6l3.5 3.5L11.5 6' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); 
+        }
+
+        /* Couleurs améliorées par statut */
+        .order-status-select.status-pending { 
+            background-color: #ff9800;
+            background-image: linear-gradient(135deg, #ff9800 0%, #f57c00 100%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 6l3.5 3.5L11.5 6' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        }
+        .order-status-select.status-processing { 
+            background-color: #2196f3;
+            background-image: linear-gradient(135deg, #2196f3 0%, #1976d2 100%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 6l3.5 3.5L11.5 6' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        }
+        .order-status-select.status-shipped { 
+            background-color: #3f51b5;
+            background-image: linear-gradient(135deg, #3f51b5 0%, #303f9f 100%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 6l3.5 3.5L11.5 6' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        }
+        .order-status-select.status-delivered { 
+            background-color: #4caf50;
+            background-image: linear-gradient(135deg, #4caf50 0%, #388e3c 100%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 6l3.5 3.5L11.5 6' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        }
+        .order-status-select.status-cancelled { 
+            background-color: #f44336;
+            background-image: linear-gradient(135deg, #f44336 0%, #d32f2f 100%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 6l3.5 3.5L11.5 6' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        }
+
+        /* Améliorer le contraste dans les cellules du tableau */
+        #ordersTable td select.order-status-select { 
+            color: #fff; 
+            border: none;
+        }
+        
+        /* Effet hover spécifique par statut */
+        .order-status-select.status-pending:hover { box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4); }
+        .order-status-select.status-processing:hover { box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4); }
+        .order-status-select.status-shipped:hover { box-shadow: 0 4px 12px rgba(63, 81, 181, 0.4); }
+        .order-status-select.status-delivered:hover { box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4); }
+        .order-status-select.status-cancelled:hover { box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4); }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="min-vh-100 d-flex align-items-center justify-content-center bg-light">
+        <div class="card shadow" style="width: 400px;">
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <h2 class="text-primary">
+                        <i class="bi bi-shield-lock"></i> Connexion Admin
+                    </h2>
+                    <p class="text-muted">Administration shop47</p>
+                </div>
+                
+                <form id="adminLoginForm">
+                    <div class="mb-3">
+                        <label class="form-label">Nom d'utilisateur</label>
+                        <input type="text" class="form-control" name="username" required 
+                               placeholder="admin" value="admin">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mot de passe</label>
+                        <input type="password" class="form-control" name="password" required 
+                               placeholder="Entrez le mot de passe" value="admin123">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-box-arrow-in-right"></i> Se connecter
+                    </button>
+                </form>
+                
+                <div class="text-center mt-3">
+                    <small class="text-muted">
+                        <a href="/" class="text-decoration-none">← Retour au magasin</a>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="d-none">
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg admin-navbar">
+            <div class="container-fluid">
+                <button class="navbar-toggler d-md-none" type="button" onclick="toggleSidebar()">
+                    <i class="bi bi-list"></i>
+                </button>
+                
+                <a class="navbar-brand" href="/">
+                    <i class="bi bi-flower1"></i> Tabrima Admin
+                </a>
+                
+                <div class="navbar-nav ms-auto">
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> <span id="adminName">Admin</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/" target="_blank">Voir le magasin</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="adminLogout()">Déconnexion</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Sidebar -->
+                <div class="col-md-3 col-lg-2 bg-light sidebar py-3" id="adminSidebar">
+                    <ul class="nav nav-pills flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" onclick="showAdminPage('dashboard')">
+                                <i class="bi bi-speedometer2"></i> Tableau de bord
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showAdminPage('categories')">
+                                <i class="bi bi-tags"></i> Catégories
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showAdminPage('products')">
+                                <i class="bi bi-box"></i> Produits
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showAdminPage('orders')">
+                                <i class="bi bi-receipt"></i> Commandes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showAdminPage('access-links')">
+                                <i class="bi bi-link-45deg"></i> Liens d'accès
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Main Content -->
+                <div class="col-md-9 col-lg-10 py-3">
+                    <!-- Dashboard Page -->
+                    <div id="adminDashboardPage" class="admin-page">
+                        <h2 class="mb-4">Tableau de bord</h2>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <div class="card bg-primary text-white">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h4 id="totalProducts">0</h4>
+                                                <p class="mb-0">Produits</p>
+                                            </div>
+                                            <div class="align-self-center">
+                                                <i class="bi bi-box fs-2"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-success text-white">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h4 id="totalOrders">0</h4>
+                                                <p class="mb-0">Commandes</p>
+                                            </div>
+                                            <div class="align-self-center">
+                                                <i class="bi bi-receipt fs-2"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-info text-white">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h4 id="totalCategories">0</h4>
+                                                <p class="mb-0">Catégories</p>
+                                            </div>
+                                            <div class="align-self-center">
+                                                <i class="bi bi-tags fs-2"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-warning text-white">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h4 id="pendingOrders">0</h4>
+                                                <p class="mb-0">Commandes en attente</p>
+                                            </div>
+                                            <div class="align-self-center">
+                                                <i class="bi bi-clock fs-2"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Recent Orders</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-sm" id="recentOrdersTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Order ID</th>
+                                                        <th>Customer</th>
+                                                        <th>Total</th>
+                                                        <th>Status</th>
+                                                        <th>Date</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <!-- Recent orders will be loaded here -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Categories Page -->
+                    <div id="adminCategoriesPage" class="admin-page d-none">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2>Categories Management</h2>
+                            <button class="btn btn-primary" onclick="showCategoryModal()">
+                                <i class="bi bi-plus"></i> Add Category
+                            </button>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row" id="categoriesGrid">
+                                    <!-- Categories will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Products Page -->
+                    <div id="adminProductsPage" class="admin-page d-none">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2>📦 Gestion des Produits</h2>
+                            <button class="btn btn-primary" onclick="showProductModal()">
+                                <i class="bi bi-plus-circle"></i> Ajouter un Produit
+                            </button>
+                        </div>
+
+                        <!-- Search and Filter Section -->
+                        <div class="card mb-4 product-search-section">
+                            <div class="card-header product-search-header">
+                                <h5 class="mb-0">🔍 Recherche et Filtres</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <!-- Search Bar -->
+                                    <div class="col-md-4">
+                                        <label class="form-label product-filter-label">
+                                            <i class="bi bi-search"></i> Rechercher un produit
+                                        </label>
+                                        <div class="input-group product-search-input-group">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-search"></i>
+                                            </span>
+                                            <input type="text" class="form-control product-search-input" id="productSearchInput" 
+                                                   placeholder="Nom, description, SKU... (Ctrl+F pour focus)" 
+                                                   onkeyup="searchProducts()"
+                                                   autocomplete="off">
+                                            <button class="btn product-search-clear-btn" type="button" onclick="clearProductSearch()" title="Effacer">
+                                                <i class="bi bi-x"></i>
+                                            </button>
+                                        </div>
+                                        <div class="form-text product-search-tip">
+                                            <i class="bi bi-lightbulb"></i> 
+                                            <strong>Astuce:</strong> Utilisez Ctrl+F pour accéder rapidement à la recherche
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Category Filter -->
+                                    <div class="col-md-3">
+                                        <label class="form-label product-filter-label">
+                                            <i class="bi bi-tags"></i> Catégorie
+                                        </label>
+                                        <select class="form-select product-filter-select" id="productCategoryFilter" onchange="filterProducts()">
+                                            <option value="">Toutes les catégories</option>
+                                            <!-- Categories will be loaded here -->
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Stock Filter -->
+                                    <div class="col-md-2">
+                                        <label class="form-label product-filter-label">
+                                            <i class="bi bi-box"></i> Stock
+                                        </label>
+                                        <select class="form-select product-filter-select" id="productStockFilter" onchange="filterProducts()">
+                                            <option value="">Tous</option>
+                                            <option value="in-stock">En stock</option>
+                                            <option value="low-stock">Stock faible (&lt;10)</option>
+                                            <option value="out-of-stock">Rupture</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Reset Button -->
+                                    <div class="col-md-3 d-flex align-items-end">
+                                        <button class="btn product-reset-btn w-100" onclick="resetProductFilters()" title="Réinitialiser">
+                                            <i class="bi bi-arrow-clockwise"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Search Results Info -->
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <div id="productSearchInfo" class="product-search-info">
+                                            <!-- Search results info will appear here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card product-results-section">
+                            <div class="card-header product-results-header">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">📋 Liste des Produits</h5>
+                                    <div>
+                                        <span class="badge product-count-badge">Total: <span id="totalProductsCount">0</span></span>
+                                        <span class="badge product-count-badge visible">Affichés: <span id="visibleProductsCount">0</span></span>
+                                        <button class="btn btn-sm product-refresh-btn" onclick="loadProducts()">
+                                            <i class="bi bi-arrow-clockwise"></i> Actualiser
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover product-table" id="productsTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Image</th>
+                                                <th>Name</th>
+                                                <th>Category</th>
+                                                <th>Price</th>
+                                                <th>Stock</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Products will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Orders Page -->
+                    <div id="adminOrdersPage" class="admin-page d-none">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2>📋 Orders Management</h2>
+                            <button class="btn btn-outline-primary" onclick="loadOrders()">
+                                <i class="bi bi-arrow-clockwise"></i> Actualiser
+                            </button>
+                        </div>
+
+                        <!-- Orders Search and Filter Section -->
+                        <div class="card mb-4 order-search-section">
+                            <div class="card-header order-search-header">
+                                <h5 class="mb-0">🔍 Recherche et Filtres des Commandes</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <!-- Search Bar -->
+                                    <div class="col-md-4">
+                                        <label class="form-label order-filter-label">
+                                            <i class="bi bi-search"></i> Rechercher une commande
+                                        </label>
+                                        <div class="input-group order-search-input-group">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-search"></i>
+                                            </span>
+                                            <input type="text" class="form-control order-search-input" id="orderSearchInput" 
+                                                   placeholder="ID, client, email... (Ctrl+F pour focus)" 
+                                                   onkeyup="searchOrders()"
+                                                   autocomplete="off">
+                                            <button class="btn order-search-clear-btn" type="button" onclick="clearOrderSearch()" title="Effacer">
+                                                <i class="bi bi-x"></i>
+                                            </button>
+                                        </div>
+                                        <div class="form-text order-search-tip">
+                                            <i class="bi bi-lightbulb"></i> 
+                                            <strong>Astuce:</strong> Recherchez par ID, nom du client ou email
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Status Filter -->
+                                    <div class="col-md-3">
+                                        <label class="form-label order-filter-label">
+                                            <i class="bi bi-flag"></i> Statut
+                                        </label>
+                                        <select class="form-select order-filter-select" id="orderStatusFilter" onchange="filterOrders()">
+                                            <option value="">Tous les statuts</option>
+                                            <option value="pending">En attente</option>
+                                            <option value="processing">En traitement</option>
+                                            <option value="shipped">Expédié</option>
+                                            <option value="delivered">Livré</option>
+                                            <option value="cancelled">Annulé</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Date Filter -->
+                                    <div class="col-md-2">
+                                        <label class="form-label order-filter-label">
+                                            <i class="bi bi-calendar"></i> Période
+                                        </label>
+                                        <select class="form-select order-filter-select" id="orderDateFilter" onchange="filterOrders()">
+                                            <option value="">Toutes les dates</option>
+                                            <option value="today">Aujourd'hui</option>
+                                            <option value="week">Cette semaine</option>
+                                            <option value="month">Ce mois</option>
+                                            <option value="year">Cette année</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Reset Button -->
+                                    <div class="col-md-3 d-flex align-items-end">
+                                        <button class="btn order-reset-btn w-100" onclick="resetOrderFilters()" title="Réinitialiser">
+                                            <i class="bi bi-arrow-clockwise"></i> Réinitialiser
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Search Results Info -->
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <div id="orderSearchInfo" class="order-search-info">
+                                            <!-- Search results info will appear here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card order-results-section">
+                            <div class="card-header order-results-header">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">📋 Liste des Commandes</h5>
+                                    <div>
+                                        <span class="badge order-count-badge">Total: <span id="totalOrdersCount">0</span></span>
+                                        <span class="badge order-count-badge visible">Affichées: <span id="visibleOrdersCount">0</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table" id="ordersTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Order ID</th>
+                                                <th>Customer</th>
+                                                <th>Total</th>
+                                                <th>Status</th>
+                                                <th>Date</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Orders will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Delivered Orders Section -->
+                        <div class="card order-results-section mt-4">
+                            <div class="card-header order-results-header">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">✅ Commandes Livrées</h5>
+                                    <div>
+                                        <span class="badge order-count-badge bg-success">Livrées: <span id="deliveredOrdersCount">0</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table" id="deliveredOrdersTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Order ID</th>
+                                                <th>Customer</th>
+                                                <th>Total</th>
+                                                <th>Date Livraison</th>
+                                                <th>Actions</th>
+                                                <th>Supprimer</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Delivered orders will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Access Links Page -->
+                    <div id="adminAccessLinksPage" class="admin-page d-none">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2>🔗 Gestion des Liens d'Accès</h2>
+                            <button class="btn btn-primary" onclick="showGenerateLinkModal()">
+                                <i class="bi bi-plus-circle"></i> Générer un Lien
+                            </button>
+                        </div>
+
+                        <!-- Statistics Cards -->
+                        <div class="row mb-4" id="accessLinksStats">
+                            <div class="col-md-2">
+                                <div class="card bg-info text-white">
+                                    <div class="card-body text-center">
+                                        <h4 id="totalLinks">0</h4>
+                                        <small>Total</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="card bg-success text-white">
+                                    <div class="card-body text-center">
+                                        <h4 id="activeLinks">0</h4>
+                                        <small>Actifs</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="card bg-primary text-white">
+                                    <div class="card-body text-center">
+                                        <h4 id="usedLinks">0</h4>
+                                        <small>Utilisés</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="card bg-warning text-white">
+                                    <div class="card-body text-center">
+                                        <h4 id="expiredLinks">0</h4>
+                                        <small>Expirés</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="card bg-danger text-white">
+                                    <div class="card-body text-center">
+                                        <h4 id="revokedLinks">0</h4>
+                                        <small>Révoqués</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="card bg-secondary text-white">
+                                    <div class="card-body text-center">
+                                        <h4 id="totalAccesses">0</h4>
+                                        <small>Accès</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Access Links Search and Filter Section -->
+                        <div class="card mb-4 link-search-section">
+                            <div class="card-header link-search-header">
+                                <h5 class="mb-0">🔍 Recherche et Filtres des Liens d'Accès</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <!-- Search Bar -->
+                                    <div class="col-md-4">
+                                        <label class="form-label link-filter-label">
+                                            <i class="bi bi-search"></i> Rechercher un lien
+                                        </label>
+                                        <div class="input-group link-search-input-group">
+                                            <span class="input-group-text">
+                                                <i class="bi bi-search"></i>
+                                            </span>
+                                            <input type="text" class="form-control link-search-input" id="linkSearchInput" 
+                                                   placeholder="Token, description, créateur... (Ctrl+F pour focus)" 
+                                                   onkeyup="searchLinks()"
+                                                   autocomplete="off">
+                                            <button class="btn link-search-clear-btn" type="button" onclick="clearLinkSearch()" title="Effacer">
+                                                <i class="bi bi-x"></i>
+                                            </button>
+                                        </div>
+                                        <div class="form-text link-search-tip">
+                                            <i class="bi bi-lightbulb"></i> 
+                                            <strong>Astuce:</strong> Recherchez par token, description ou créateur
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Status Filter -->
+                                    <div class="col-md-3">
+                                        <label class="form-label link-filter-label">
+                                            <i class="bi bi-flag"></i> Statut
+                                        </label>
+                                        <select class="form-select link-filter-select" id="linkStatusFilter" onchange="filterLinks()">
+                                            <option value="">Tous les statuts</option>
+                                            <option value="active">Actif</option>
+                                            <option value="used">Utilisé</option>
+                                            <option value="expired">Expiré</option>
+                                            <option value="revoked">Révoqué</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Date Filter -->
+                                    <div class="col-md-2">
+                                        <label class="form-label link-filter-label">
+                                            <i class="bi bi-calendar"></i> Période
+                                        </label>
+                                        <select class="form-select link-filter-select" id="linkDateFilter" onchange="filterLinks()">
+                                            <option value="">Toutes les dates</option>
+                                            <option value="today">Aujourd'hui</option>
+                                            <option value="week">Cette semaine</option>
+                                            <option value="month">Ce mois</option>
+                                            <option value="year">Cette année</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Reset Button -->
+                                    <div class="col-md-3 d-flex align-items-end">
+                                        <button class="btn link-reset-btn w-100" onclick="resetLinkFilters()" title="Réinitialiser">
+                                            <i class="bi bi-arrow-clockwise"></i> Réinitialiser
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Search Results Info -->
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <div id="linkSearchInfo" class="link-search-info">
+                                            <!-- Search results info will appear here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card link-results-section">
+                            <div class="card-header link-results-header">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">📋 Liste des Liens d'Accès</h5>
+                                    <div>
+                                        <span class="badge link-count-badge">Total: <span id="totalLinksCount">0</span></span>
+                                        <span class="badge link-count-badge visible">Affichés: <span id="visibleLinksCount">0</span></span>
+                                        <span class="badge bg-warning me-2">Limite: <span id="linksLimit">300</span></span>
+                                        <button class="btn btn-sm link-refresh-btn" onclick="refreshAccessLinks()">
+                                            <i class="bi bi-arrow-clockwise"></i> Actualiser
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="accessLinksTable">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Token</th>
+                                                <th>Description</th>
+                                                <th>Statut</th>
+                                                <th>Créé par</th>
+                                                <th>Créé le</th>
+                                                <th>Expire le</th>
+                                                <th>Utilisé le</th>
+                                                <th>Accès</th>
+                                                <th>Appareil</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Access links will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Modal -->
+    <div class="modal fade" id="categoryModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="categoryModalTitle">Add Category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="categoryForm">
+                        <input type="hidden" name="categoryId" id="categoryId">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Name *</label>
+                            <input type="text" class="form-control" name="name" id="categoryName" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" name="description" id="categoryDescription" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Icon *</label>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="icon" id="categoryIcon" required readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="button" class="btn btn-outline-primary w-100" onclick="showIconSelector()">
+                                        <i class="bi bi-palette"></i> Choose Icon
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <span class="text-muted">Preview: </span>
+                                <i id="iconPreview" class="bi bi-tag" style="font-size: 1.5rem; color: #1ee98a;"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Image de la catégorie</label>
+                            <input type="file" class="form-control" name="categoryImage" id="categoryImage" accept="image/*">
+                            <div class="form-text">Image qui s'affichera dans la section "Nos Catégories" du store (optionnel)</div>
+                            <div id="categoryImagePreview" class="mt-2" style="display: none;">
+                                <img id="categoryImagePreviewImg" src="" alt="Preview" style="max-width: 200px; max-height: 150px; border-radius: 8px; border: 1px solid #ddd;">
+                                <div class="mt-1">
+                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeCategoryImagePreview()">
+                                        <i class="bi bi-trash"></i> Supprimer
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary" onclick="saveCategory()">
+                        <i class="bi bi-check"></i> Sauvegarder la catégorie
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Icon Selector Modal -->
+    <div class="modal fade" id="iconSelectorModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Choisir une icône</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="iconCategories">
+                        <!-- Icon categories will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div class="modal fade" id="productModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalTitle">Ajouter un produit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="productForm" enctype="multipart/form-data">
+                        <input type="hidden" name="productId" id="productId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nom *</label>
+                                <input type="text" class="form-control" name="name" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Catégorie *</label>
+                                <select class="form-select" name="category_id" required id="productCategorySelect">
+                                    <!-- Categories will be loaded here -->
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Prix *</label>
+                                <input type="number" class="form-control" name="price" step="0.01" min="0" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Stock *</label>
+                                <input type="number" class="form-control" name="stock" min="0" required>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Description *</label>
+                                <textarea class="form-control" name="description" rows="3" required></textarea>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Images du produit</label>
+                                <div class="image-upload-container">
+                                    <input type="file" class="form-control mb-2" name="images" accept="image/*" multiple id="productImages">
+                                    <small class="text-muted">Vous pouvez sélectionner plusieurs images. La première image sera définie comme principale.</small>
+                                    
+                                    <!-- Image Preview Container -->
+                                    <div class="image-preview-container mt-3" id="imagePreviewContainer">
+                                        <!-- Previews will be shown here -->
+                                    </div>
+                                    
+                                    <!-- Primary Image Selection -->
+                                    <div class="mt-2" id="primaryImageSelection" style="display: none;">
+                                        <label class="form-label">Primary Image:</label>
+                                        <select class="form-select" name="primaryImageIndex" id="primaryImageSelect">
+                                            <!-- Options will be populated dynamically -->
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <!-- Existing Images Container (for edit mode) -->
+                                <div class="existing-images-container" id="existingImagesContainer" style="display: none;">
+                                    <!-- Existing images will be loaded here -->
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary" onclick="saveProduct()">Sauvegarder le produit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generate Link Modal -->
+    <div class="modal fade" id="generateLinkModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">🔗 Générer un Lien d'Accès</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> 
+                        <strong>Limite:</strong> Vous pouvez créer jusqu'à <strong>300 liens</strong> au total.
+                        Chaque lien ne peut être utilisé que sur <strong>un seul appareil</strong>.
+                    </div>
+                    
+                    <form id="generateLinkForm">
+                        <div class="mb-3">
+                            <label class="form-label">Description *</label>
+                            <input type="text" class="form-control" name="description" required
+                                   placeholder="Ex: Lien pour client VIP, Accès temporaire, etc.">
+                            <div class="form-text">Description pour identifier ce lien</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Expiration (heures)</label>
+                            <input type="number" class="form-control" name="expires_hours" min="1" max="8760" 
+                                   placeholder="Laisser vide pour aucune expiration">
+                            <div class="form-text">Maximum: 8760 heures (1 an). Vide = permanent</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="confirmGenerate" required>
+                                <label class="form-check-label" for="confirmGenerate">
+                                    Je confirme que ce lien sera unique et utilisable sur un seul appareil
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x"></i> Annuler
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="generateAccessLink()">
+                        <i class="bi bi-plus-circle"></i> Générer le Lien
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generated Link Modal -->
+    <div class="modal fade" id="generatedLinkModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">✅ Lien d'Accès Généré avec Succès</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-success">
+                        <i class="bi bi-check-circle"></i> 
+                        <strong>Lien généré avec succès !</strong>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label"><strong>🔗 Lien d'Accès Complet:</strong></label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="generatedLink" readonly>
+                                    <button class="btn btn-outline-primary" type="button" onclick="copyToClipboard('generatedLink')">
+                                        <i class="bi bi-clipboard"></i> Copier
+                                    </button>
+                                </div>
+                                <div class="form-text">Partagez ce lien avec l'utilisateur</div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label"><strong>🔑 Token Brut:</strong></label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="generatedToken" readonly>
+                                    <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('generatedToken')">
+                                        <i class="bi bi-clipboard"></i> Copier
+                                    </button>
+                                </div>
+                                <div class="form-text text-warning">
+                                    <i class="bi bi-exclamation-triangle"></i> 
+                                    <strong>Important:</strong> Sauvegardez ce token, il ne sera plus affiché.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label"><strong>📝 Description:</strong></label>
+                                <p class="form-control-plaintext" id="generatedDescription">-</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3" id="linkExpiration">
+                                <label class="form-label"><strong>⏰ Expiration:</strong></label>
+                                <p class="form-control-plaintext" id="expirationTime">Aucune</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <h6><i class="bi bi-info-circle"></i> Informations importantes:</h6>
+                        <ul class="mb-0">
+                            <li>Ce lien ne peut être utilisé que sur <strong>un seul appareil</strong></li>
+                            <li>Une fois utilisé, il sera lié à cet appareil définitivement</li>
+                            <li>Vous pouvez révoquer ce lien à tout moment depuis le panel admin</li>
+                            <li>Total de liens actifs: <span id="currentLinksCount">-</span>/300</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">
+                        <i class="bi bi-check"></i> Compris
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Access Link Details Modal -->
+    <div class="modal fade" id="accessLinkDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title"><i class="bi bi-link-45deg"></i> Détails du Lien d'Accès</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label"><strong>🔗 Lien Complet:</strong></label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="detailFullLink" readonly>
+                                <button class="btn btn-outline-primary" type="button" onclick="copyToClipboard('detailFullLink')">
+                                    <i class="bi bi-clipboard"></i> Copier
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>🔑 Token:</strong></label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="detailToken" readonly>
+                                <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('detailToken')">
+                                    <i class="bi bi-clipboard"></i> Copier
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><strong># ID:</strong></label>
+                            <input type="text" class="form-control" id="detailId" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>📝 Description:</strong></label>
+                            <input type="text" class="form-control" id="detailDescription" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>🏷️ Statut:</strong></label>
+                            <input type="text" class="form-control" id="detailStatus" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>👤 Créé par:</strong></label>
+                            <input type="text" class="form-control" id="detailCreatedBy" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>📅 Créé le:</strong></label>
+                            <input type="text" class="form-control" id="detailCreatedAt" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>⏰ Expire le:</strong></label>
+                            <input type="text" class="form-control" id="detailExpiresAt" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>👁️ Utilisé le:</strong></label>
+                            <input type="text" class="form-control" id="detailUsedAt" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>📈 Accès:</strong></label>
+                            <input type="text" class="form-control" id="detailAccessCount" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>💻 Appareil:</strong></label>
+                            <input type="text" class="form-control" id="detailDeviceInfo" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="/public/js/admin.js"></script>
+</body>
+</html>

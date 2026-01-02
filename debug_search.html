@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Recherche</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Debug de la Recherche</h2>
+        
+        <div class="row">
+            <div class="col-md-8">
+                <h4>Test de la Barre de Recherche</h4>
+                
+                <!-- Copie de la barre de recherche -->
+                <div class="search-container mb-3">
+                    <div class="search-wrapper">
+                        <input type="text" 
+                               class="form-control search-input" 
+                               id="searchInput" 
+                               placeholder="Rechercher des produits..." 
+                               autocomplete="off">
+                        <button class="search-btn btn btn-primary" type="button" onclick="testPerformSearch()">
+                            <i class="bi bi-search"></i>
+                        </button>
+                        <div class="search-suggestions" id="searchSuggestions"></div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <button class="btn btn-success" onclick="testAPI()">Test API Direct</button>
+                    <button class="btn btn-info" onclick="testFunctions()">Test Fonctions</button>
+                    <button class="btn btn-warning" onclick="checkElements()">Vérifier Éléments</button>
+                </div>
+                
+                <div class="mt-3">
+                    <h5>Logs de Debug:</h5>
+                    <div id="debugLog" class="bg-light p-3" style="height: 300px; overflow-y: auto; font-family: monospace; font-size: 12px;"></div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <h4>État Actuel</h4>
+                <div id="currentState" class="bg-light p-3">
+                    <p><strong>currentFilters:</strong> <span id="filtersState">Non défini</span></p>
+                    <p><strong>currentPage:</strong> <span id="pageState">Non défini</span></p>
+                    <p><strong>searchInput:</strong> <span id="inputState">Non trouvé</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let debugLog = [];
+        
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            debugLog.push(`[${timestamp}] ${message}`);
+            updateDebugDisplay();
+            console.log(message);
+        }
+        
+        function updateDebugDisplay() {
+            const logDiv = document.getElementById('debugLog');
+            logDiv.innerHTML = debugLog.join('<br>');
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        function updateState() {
+            document.getElementById('filtersState').textContent = 
+                typeof currentFilters !== 'undefined' ? JSON.stringify(currentFilters) : 'Non défini';
+            document.getElementById('pageState').textContent = 
+                typeof currentPage !== 'undefined' ? currentPage : 'Non défini';
+            document.getElementById('inputState').textContent = 
+                document.getElementById('searchInput') ? 'Trouvé' : 'Non trouvé';
+        }
+        
+        function testPerformSearch() {
+            log('=== TEST PERFORM SEARCH ===');
+            const searchInput = document.getElementById('searchInput');
+            const query = searchInput ? searchInput.value.trim() : '';
+            
+            log(`Query: "${query}"`);
+            
+            if (typeof performSearch === 'function') {
+                log('performSearch function exists');
+                try {
+                    performSearch();
+                    log('performSearch called successfully');
+                } catch (error) {
+                    log(`Error calling performSearch: ${error.message}`);
+                }
+            } else {
+                log('ERROR: performSearch function not found');
+            }
+        }
+        
+        async function testAPI() {
+            log('=== TEST API DIRECT ===');
+            const query = document.getElementById('searchInput').value.trim() || 'phone';
+            
+            try {
+                const url = `/api/products?search=${encodeURIComponent(query)}`;
+                log(`Testing URL: ${url}`);
+                
+                const response = await fetch(url);
+                log(`Response status: ${response.status}`);
+                
+                const data = await response.json();
+                log(`Response data: ${JSON.stringify(data, null, 2)}`);
+                
+            } catch (error) {
+                log(`API Error: ${error.message}`);
+            }
+        }
+        
+        function testFunctions() {
+            log('=== TEST FUNCTIONS ===');
+            
+            const functions = [
+                'performSearch',
+                'loadProducts', 
+                'showPage',
+                'initializeApp',
+                'initializeSearch'
+            ];
+            
+            functions.forEach(funcName => {
+                if (typeof window[funcName] === 'function') {
+                    log(`✓ ${funcName} exists`);
+                } else {
+                    log(`✗ ${funcName} NOT FOUND`);
+                }
+            });
+        }
+        
+        function checkElements() {
+            log('=== CHECK ELEMENTS ===');
+            
+            const elements = [
+                'searchInput',
+                'searchSuggestions',
+                'catalogPage',
+                'productsGrid'
+            ];
+            
+            elements.forEach(elemId => {
+                const elem = document.getElementById(elemId);
+                if (elem) {
+                    log(`✓ Element ${elemId} found`);
+                } else {
+                    log(`✗ Element ${elemId} NOT FOUND`);
+                }
+            });
+        }
+        
+        // Initialisation
+        window.onload = function() {
+            log('Page loaded');
+            updateState();
+            
+            // Essayer de charger le script principal
+            const script = document.createElement('script');
+            script.src = '/js/app.js';
+            script.onload = function() {
+                log('app.js loaded');
+                setTimeout(() => {
+                    updateState();
+                    testFunctions();
+                }, 500);
+            };
+            script.onerror = function() {
+                log('ERROR: Failed to load app.js');
+            };
+            document.head.appendChild(script);
+        };
+        
+        // Test périodique de l'état
+        setInterval(updateState, 2000);
+    </script>
+</body>
+</html>
