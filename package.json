@@ -1,7 +1,7 @@
 {
-  "name": "tabrima-store",
+  "name": "herbilia-store",
   "version": "1.0.0",
-  "description": "Tabrima - Body Care for Females",
+  "description": "hérbilia - Body Care for Females",
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",

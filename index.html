@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabrima - Soins & Beauté au Féminin</title>
+    <title>hérbilia - Soins & Beauté au Féminin</title>
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <!-- AOS Animation Library -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Custom CSS -->
     <link href="/public/css/style.css" rel="stylesheet">
 </head>
@@ -21,7 +23,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
             <a class="navbar-brand fw-bold" href="/">
-                <i class="bi bi-flower1"></i> Tabrima
+                <img src="/logo.png" alt="hérbilia" style="height:40px; width:auto; vertical-align:middle; margin-right:10px;"> hérbilia
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -32,13 +34,13 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="#" onclick="showPage('home')">
-                            <i class="bi bi-house"></i> Accueil
+                            <i class="fa-solid fa-house"></i> Accueil
                         </a>
                     </li>
                     
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-tags"></i> Catégories
+                            <i class="fa-solid fa-tags"></i> Catégories
                         </a>
                         <ul class="dropdown-menu modern-dropdown" id="categoriesDropdown">
                             <!-- Categories will be loaded here -->
@@ -55,7 +57,7 @@
                                placeholder="Rechercher des produits..." 
                                autocomplete="off">
                         <button class="search-btn" type="button" onclick="performSearch()">
-                            <i class="bi bi-search"></i>
+                            <i class="fa-solid fa-search"></i>
                         </button>
                         <div class="search-suggestions" id="searchSuggestions"></div>
                     </div>
@@ -64,7 +66,7 @@
                 <div class="navbar-nav">
                     <div class="nav-item">
                         <button class="btn btn-outline-light position-relative cart-btn" onclick="showCartModal()">
-                            <i class="bi bi-cart3"></i>
+<i class="fa-solid fa-shopping-cart"></i>
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count" id="cartBadge">
                                 0
                             </span>
@@ -101,17 +103,17 @@
                         <div class="col-lg-6">
                             <div class="hero-content">
                                 <h1 class="hero-title">
-                                    <span class="typing-effect">Tabrima</span>
+                                    <span class="typing-effect">hérbilia</span>
                                 </h1>
                                 <p class="hero-subtitle">
                                     ✨ Révélez votre éclat naturel avec nos soins corporels premium inspirés des rituels de beauté ancestraux
                                 </p>
                                 <div class="hero-buttons">
                                     <button class="btn btn-primary btn-lg me-3" onclick="showPage('catalog')">
-                                        <i class="bi bi-magic"></i> Explorer la Collection
+                                        <i class="fa-solid fa-wand-magic-sparkles"></i> Explorer la Collection
                                     </button>
                                     <button class="btn btn-outline-light btn-lg" onclick="scrollToSection('categories')">
-                                        <i class="bi bi-stars"></i> Nos Rituels
+                                        <i class="fa-solid fa-star"></i> Nos Rituels
                                     </button>
                                 </div>
                             </div>
@@ -139,14 +141,14 @@
                     <div class="row align-items-center">
                         <div class="col-lg-6 mb-4 mb-lg-0" data-aos="fade-right">
                             <div class="zencoder-badge mb-3">
-                                <i class="bi bi-cpu"></i> AI Expertise by Zencoder
+                                <i class="fa-solid fa-microchip"></i> AI Expertise by Zencoder
                             </div>
                             <h2 class="section-title mb-4">Votre Rituel Personnalisé par l'IA</h2>
                             <p class="lead mb-4">Laissez l'intelligence de Zencoder analyser vos besoins pour créer une routine de soin sur mesure.</p>
                             <div class="zencoder-features">
                                 <div class="feature-item d-flex mb-3">
                                     <div class="feature-icon me-3">
-                                        <i class="bi bi-check2-circle text-primary"></i>
+                                        <i class="fa-solid fa-check-circle text-primary"></i>
                                     </div>
                                     <div>
                                         <h5 class="mb-1">Analyse Cutanée Intelligente</h5>
@@ -155,7 +157,7 @@
                                 </div>
                                 <div class="feature-item d-flex mb-3">
                                     <div class="feature-icon me-3">
-                                        <i class="bi bi-check2-circle text-primary"></i>
+                                        <i class="fa-solid fa-check-circle text-primary"></i>
                                     </div>
                                     <div>
                                         <h5 class="mb-1">Recommandations Prédictives</h5>
@@ -164,7 +166,7 @@
                                 </div>
                             </div>
                             <button class="btn btn-primary mt-4">
-                                <i class="bi bi-magic"></i> Démarrer la Consultation IA
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Démarrer la Consultation IA
                             </button>
                         </div>
                         <div class="col-lg-6" data-aos="fade-left">
@@ -173,7 +175,7 @@
                                     <div class="zencoder-dot me-2 bg-success rounded-circle" style="width: 10px; height: 10px;"></div>
                                     <span class="fw-bold">Zencoder Assistant</span>
                                 </div>
-                                <div class="zencoder-body p-4 bg-light" style="min-height: 300px; background-color: #f8f9fa !important;">
+                                <div class="zencoder-body p-4" style="min-height: 300px; background-color: var(--secondary-color) !important;">
                                     <div class="message incoming mb-3 p-3 bg-white rounded-3 shadow-sm border" style="max-width: 85%;">
                                         "Bonjour ! Je suis Zencoder, votre assistant beauté IA. Quelle est votre préoccupation principale aujourd'hui ?"
                                     </div>
@@ -186,7 +188,7 @@
                                 </div>
                                 <div class="zencoder-footer p-3 border-top bg-white d-flex align-items-center">
                                     <div class="input-placeholder text-muted flex-grow-1">Tapez votre message ici...</div>
-                                    <i class="bi bi-send-fill text-primary ms-2" style="cursor: pointer; font-size: 1.2rem;"></i>
+                                    <i class="fa-solid fa-paper-plane text-primary ms-2" style="cursor: pointer; font-size: 1.2rem;"></i>
                                 </div>
                             </div>
                         </div>
@@ -202,7 +204,7 @@
                             <!-- Section Header -->
                             <div class="section-header text-center mb-5">
                                 <div class="section-badge">
-                                    <i class="bi bi-lightning-charge-fill"></i>
+                                    <i class="fa-solid fa-bolt"></i>
                                     <span>Découvrir</span>
                                 </div>
                                 <h2 class="section-title title-accent">Nos Rituels de Soin</h2>
@@ -227,7 +229,7 @@
                 <div class="row">
                     <!-- Filters Sidebar -->
                     <div class="col-lg-3 mb-4">
-                        <div class="card">
+                        <div class="card catalog-filters">
                             <div class="card-header">
                                 <h5 class="mb-0">Filtres</h5>
                             </div>
@@ -262,28 +264,34 @@
                     <!-- Products Grid -->
                     <div class="col-lg-9">
                         <!-- Search Results Info -->
-                        <div class="search-results-header mb-3" id="searchResultsHeader" style="display: none;">
-                            <div class="alert alert-info d-flex align-items-center">
-                                <i class="bi bi-search me-2"></i>
-                                <div class="flex-grow-1">
-                                    <strong class="search-results-info">Résultats de recherche</strong>
-                                    <button class="btn btn-sm btn-outline-secondary ms-2" onclick="clearSearchAndShowAll()">
-                                        <i class="bi bi-x"></i> Effacer la recherche
-                                    </button>
+                        <div class="search-results-header mb-4" id="searchResultsHeader" style="display: none;">
+                            <div class="d-flex align-items-center justify-content-between p-3 bg-white rounded-3 shadow-sm border-start border-4 border-primary">
+                                <div class="d-flex align-items-center">
+                                    <i class="fa-solid fa-magnifying-glass text-primary me-3 fs-5"></i>
+                                    <div>
+                                        <span class="text-muted small d-block">Résultats pour</span>
+                                        <strong class="search-results-info h6 mb-0">Recherche</strong>
+                                    </div>
                                 </div>
+                                <button class="btn btn-sm btn-link text-decoration-none text-muted" onclick="clearSearchAndShowAll()">
+                                    <i class="fa-solid fa-xmark me-1"></i> Effacer
+                                </button>
                             </div>
                         </div>
                         
                         <!-- Category Filter Info -->
-                        <div class="category-filter-header mb-3" id="categoryFilterHeader" style="display: none;">
-                            <div class="alert alert-success d-flex align-items-center">
-                                <i class="bi bi-tags me-2"></i>
-                                <div class="flex-grow-1">
-                                    <strong class="category-filter-info">Catégorie sélectionnée</strong>
-                                    <button class="btn btn-sm btn-outline-secondary ms-2" onclick="showAllProducts()">
-                                        <i class="bi bi-x"></i> Voir tous les produits
-                                    </button>
+                        <div class="category-filter-header mb-4" id="categoryFilterHeader" style="display: none;">
+                            <div class="d-flex align-items-center justify-content-between p-3 bg-white rounded-3 shadow-sm border-start border-4 border-success">
+                                <div class="d-flex align-items-center">
+                                    <i class="fa-solid fa-tags text-success me-3 fs-5"></i>
+                                    <div>
+                                        <span class="text-muted small d-block">Catégorie</span>
+                                        <strong class="category-filter-info h6 mb-0">Toutes</strong>
+                                    </div>
                                 </div>
+                                <button class="btn btn-sm btn-link text-decoration-none text-muted" onclick="showAllProducts()">
+                                    <i class="fa-solid fa-xmark me-1"></i> Effacer
+                                </button>
                             </div>
                         </div>
                         
@@ -565,12 +573,21 @@
                 </div>
                 <div class="modal-body">
                     <div id="cartModalItems">
-b
                         <!-- Cart items will be loaded here -->
                     </div>
-                    <div class="cart-modal-footer mt-4">
-                        <button class="btn btn-secondary" data-bs-dismiss="modal">Continuer vos achats</button>
-                        <button class="btn btn-primary" onclick="showPage('checkout'); resetModals()">Passer au paiement</button>
+                    <div class="cart-modal-footer mt-4 pt-3 border-top">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <span class="h5 mb-0 fw-bold">Total</span>
+                            <span class="h4 mb-0 fw-bold text-primary" id="cartModalTotal">0.00 DH</span>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary btn-lg rounded-pill fw-bold py-3" onclick="showPage('checkout'); resetModals()">
+                                <i class="bi bi-bag-check me-2"></i> Commander maintenant
+                            </button>
+                            <button class="btn btn-link text-muted text-decoration-none small" data-bs-dismiss="modal">
+                                Continuer mes achats
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -605,9 +622,9 @@ b
     </div>
 
     <!-- Floating Cart Icon -->
-    <div class="cart-float d-none" id="floatingCart" onclick="showCartModal()">
+    <div class="cart-float d-none" id="cartFloat" onclick="showCartModal()">
         <i class="bi bi-cart3"></i>
-        <span class="cart-float-badge" id="floatingCartBadge">0</span>
+        <span class="cart-float-badge" id="cartFloatBadge">0</span>
     </div>
 
     <!-- Scripts -->

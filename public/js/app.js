@@ -512,7 +512,7 @@ function displayProducts(products) {
     
     container.innerHTML = products.map(product => `
         <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card product-card h-100" onclick="showProductDetail(${product.id})">
+            <div class="card product-card h-100 card-hover-advanced" onclick="showProductDetail(${product.id})">
                 <img src="${product.primary_image || product.image || '/images/placeholder.svg'}" class="card-img-top product-image" alt="${product.name}">
                 <div class="card-body d-flex flex-column">
                     <h6 class="card-title">${product.name}</h6>
@@ -1740,51 +1740,58 @@ function displayCartModalItems() {
     if (cart.length === 0) {
         container.innerHTML = `
             <div class="text-center py-5">
-                <i class="bi bi-cart-x fs-1 text-muted"></i>
-                <h4 class="text-muted mt-3">Your cart is empty</h4>
-                <p class="text-muted">Add some products to get started</p>
-                <button class="btn btn-primary" data-bs-dismiss="modal" onclick="showPage('catalog')">
-                    <i class="bi bi-shop"></i> Continue Shopping
+                <div class="empty-cart-icon mb-4">
+                    <i class="bi bi-cart-x text-muted" style="font-size: 4rem; opacity: 0.3;"></i>
+                </div>
+                <h4 class="text-muted fw-bold">Votre panier est vide</h4>
+                <p class="text-muted mb-4">Découvrez nos rituels de beauté pour commencer vos achats.</p>
+                <button class="btn btn-primary px-4 py-2 rounded-pill" data-bs-dismiss="modal" onclick="showPage('catalog')">
+                    <i class="bi bi-shop me-2"></i> Explorer la boutique
                 </button>
             </div>
         `;
-        checkoutBtn.disabled = true;
+        if (checkoutBtn) checkoutBtn.disabled = true;
         return;
     }
     
-    checkoutBtn.disabled = false;
+    if (checkoutBtn) checkoutBtn.disabled = false;
     
     container.innerHTML = cart.map(item => `
-        <div class="cart-modal-item mb-3 p-3 border rounded" data-product-id="${item.id}" style="transition: all 0.3s ease;">
+        <div class="cart-modal-item" data-product-id="${item.id}">
             <div class="row align-items-center">
-                <div class="col-md-2">
-                    <img src="${item.image || '/images/placeholder.svg'}" 
-                         class="img-fluid rounded" 
-                         alt="${item.name}" 
-                         style="max-height: 80px; object-fit: cover;">
+                <div class="col-3 col-md-2">
+                    <div class="position-relative">
+                        <img src="${item.image || '/images/placeholder.svg'}" 
+                             class="img-fluid rounded-3 shadow-sm" 
+                             alt="${item.name}" 
+                             style="aspect-ratio: 1; object-fit: cover;">
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <h6 class="mb-1">${item.name}</h6>
-                    <p class="text-muted small mb-0">${formatMAD(item.price)} chacun</p>
+                <div class="col-9 col-md-5">
+                    <h6 class="mb-1 fw-bold text-dark">${item.name}</h6>
+                    <p class="text-accent small mb-0 fw-medium">${formatMAD(item.price)}</p>
                 </div>
-                <div class="col-md-3">
-                    <div class="d-flex align-items-center">
-                        <button class="btn btn-outline-secondary btn-sm" onclick="updateCartQuantity(${item.id}, -1)" title="Diminuer">
+                <div class="col-8 col-md-4 mt-3 mt-md-0">
+                    <div class="d-flex align-items-center bg-light rounded-pill p-1" style="width: fit-content;">
+                        <button class="btn btn-sm btn-white rounded-circle shadow-sm" onclick="updateCartQuantity(${item.id}, -1)" style="width: 28px; height: 28px; padding: 0;">
                             <i class="bi bi-dash"></i>
                         </button>
-                        <input type="number" class="form-control form-control-sm quantity-input text-center mx-2" min="1" value="${item.quantity}" onchange="setCartQuantity(${item.id}, parseInt(this.value || '1'))" />
-                        <button class="btn btn-outline-secondary btn-sm" onclick="updateCartQuantity(${item.id}, 1)" title="Augmenter">
+                        <span class="mx-3 fw-bold small">${item.quantity}</span>
+                        <button class="btn btn-sm btn-white rounded-circle shadow-sm" onclick="updateCartQuantity(${item.id}, 1)" style="width: 28px; height: 28px; padding: 0;">
                             <i class="bi bi-plus"></i>
                         </button>
                     </div>
-                    <div class="mt-2">
-                        <div class="fw-bold text-primary item-total">${formatMAD(item.price * item.quantity)}</div>
-                    </div>
                 </div>
-                <div class="col-md-1 text-end">
-                    <button class="btn btn-outline-danger btn-sm" onclick="removeFromCart(${item.id})" title="Remove item">
-                        <i class="bi bi-trash"></i>
+                <div class="col-4 col-md-1 text-end mt-3 mt-md-0">
+                    <button class="btn btn-link text-danger p-0" onclick="removeFromCart(${item.id})" title="Supprimer">
+                        <i class="bi bi-trash fs-5"></i>
                     </button>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-12 text-end">
+                    <span class="text-muted small">Total: </span>
+                    <span class="fw-bold text-primary">${formatMAD(item.price * item.quantity)}</span>
                 </div>
             </div>
         </div>

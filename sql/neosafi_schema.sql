@@ -1,9 +1,9 @@
--- Tabrima Store Database Schema
+-- hérbilia Store Database Schema
 -- MySQL/MariaDB compatible
 
 -- Create database (run this separately if needed)
--- CREATE DATABASE tabrima_store CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
--- USE tabrima_store;
+-- CREATE DATABASE herbilia_store CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+-- USE herbilia_store;
 
 -- Drop tables if they exist (for clean setup)
 DROP TABLE IF EXISTS order_items;
@@ -101,7 +101,7 @@ CREATE TABLE access_links (
 
 -- Insert admin user (password: admin123)
 INSERT INTO users (name, email, password, role) VALUES 
-('Admin Tabrima', 'admin@tabrima.com', '$2b$12$LQv3c1yqBWVHxkd0LQ1Gv.6FqvyHdHDHHmk4f7u/Oo9X8KeOeKlW2', 'admin');
+('Admin hérbilia', 'admin@herbilia.com', '$2b$12$LQv3c1yqBWVHxkd0LQ1Gv.6FqvyHdHDHHmk4f7u/Oo9X8KeOeKlW2', 'admin');
 
 -- Insert sample customer (password: customer123)
 INSERT INTO users (name, email, password, role) VALUES 
@@ -109,7 +109,7 @@ INSERT INTO users (name, email, password, role) VALUES
 
 -- Insert categories
 INSERT INTO categories (name, description) VALUES 
-('Gommages & Tabrima', 'Gommages traditionnels et mélanges Tabrima pour une peau éclatante'),
+('Gommages & hérbilia', 'Gommages traditionnels et mélanges hérbilia pour une peau éclatante'),
 ('Huiles Naturelles', 'Huiles de massage et soins hydratants aux extraits naturels'),
 ('Soins Visage', 'Produits spécifiques pour l''éclat et la pureté du visage'),
 ('Savons Artisanaux', 'Savons naturels fabriqués à la main'),
@@ -117,11 +117,11 @@ INSERT INTO categories (name, description) VALUES
 
 -- Insert sample products
 INSERT INTO products (name, description, price, stock, category_id, featured) VALUES 
-('Mélange Tabrima Royal', 'Le secret ancestral pour une peau unifiée et éclatante. Mélange de 14 herbes naturelles.', 150.00, 100, 1, TRUE),
+('Mélange hérbilia Royal', 'Le secret ancestral pour une peau unifiée et éclatante. Mélange de 14 herbes naturelles.', 150.00, 100, 1, TRUE),
 ('Huile d''Argan Pure', 'Huile d''argan cosmétique pressée à froid, 100% bio.', 120.00, 50, 2, TRUE),
 ('Savon Noir à l''Eucalyptus', 'Savon traditionnel pour un gommage profond au hammam.', 45.00, 200, 4, TRUE),
 ('Masque à l''Argile Rose', 'Purifie et adoucit les peaux sensibles.', 85.00, 75, 3, TRUE),
-('Kit Rituel Hammam', 'Coffret comprenant savon noir, kessa, et tabrima.', 250.00, 30, 5, TRUE),
+('Kit Rituel Hammam', 'Coffret comprenant savon noir, kessa, et hérbilia.', 250.00, 30, 5, TRUE),
 ('Gommage au Sucre & Rose', 'Exfoliant doux parfumé à la rose de Damas.', 95.00, 120, 1, FALSE),
 ('Lait de Corps Karité', 'Hydratation intense au beurre de karité pur.', 110.00, 60, 2, FALSE),
 ('Eau de Rose Distillée', 'Tonique naturel pour rafraîchir le teint.', 65.00, 150, 3, FALSE);

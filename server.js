@@ -97,9 +97,9 @@ app.post('/api/migrate-categories', async (req, res) => {
             `, [update.name, `Gamme de produits pour ${update.name}`, update.icon]);
         }
         
-        // Ajouter nouvelles catégories Tabrima
+        // Ajouter nouvelles catégories hérbilia
         const newCategories = [
-            { name: 'Gommages & Tabrima', description: 'Gommages traditionnels et mélanges Tabrima', icon: 'bi-stars' },
+            { name: 'Gommages & hérbilia', description: 'Gommages traditionnels et mélanges hérbilia', icon: 'bi-stars' },
             { name: 'Huiles Naturelles', description: 'Huiles de massage et soins hydratants', icon: 'bi-flower1' },
             { name: 'Savons Artisanaux', description: 'Savons naturels et gommants', icon: 'bi-box-seam' },
             { name: 'Kits Bien-être', description: 'Coffrets complets pour rituels de beauté', icon: 'bi-gift' }
@@ -182,7 +182,7 @@ process.on('SIGTERM', () => {
 
 // Start server
 app.listen(PORT, () => {
-    console.log(`Tabrima Store server running on port ${PORT}`);
+    console.log(`hérbilia Store server running on port ${PORT}`);
     console.log(`Niche: Female Body Care`);
     console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`Admin panel: http://localhost:${PORT}/admin`);
