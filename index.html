@@ -23,7 +23,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
             <a class="navbar-brand fw-bold" href="/">
-                <img src="/logo.png" alt="hérbilia" style="height:40px; width:auto; vertical-align:middle; margin-right:10px;"> hérbilia
+                <img src="/logo.svg" alt="hérbilia" style="height:40px; width:auto; vertical-align:middle; margin-right:10px;"> hérbilia
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -360,6 +360,7 @@
                             
                             <div class="mb-3">
                                 <span class="badge bg-success" id="productStock"></span>
+                                <span class="ms-2 text-muted small">(Disponible: <span id="availableStock">0</span>)</span>
                             </div>
                             
                             <div class="mb-4">
@@ -373,11 +374,11 @@
                                     Quantité
                                 </label>
                                 <div class="quantity-selector d-flex align-items-center">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="decreaseQuantity()">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="changeQuantity(-1)">
                                         <i class="bi bi-dash"></i>
                                     </button>
                                     <input type="number" class="form-control mx-2 text-center" id="productQuantity" value="1" min="1">
-                                    <button class="btn btn-outline-secondary" type="button" onclick="increaseQuantity()">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="changeQuantity(1)">
                                         <i class="bi bi-plus"></i>
                                     </button>
                                 </div>
@@ -523,8 +524,8 @@
         <div class="container">
             <div class="row gy-4">
                 <div class="col-lg-4">
-                    <h5 class="fw-bold mb-3">shop47</h5>
-                    <p>Votre destination de confiance pour les produits électroniques de haute qualité. Nous sélectionnons les dernières innovations pour vous offrir une expérience d'achat exceptionnelle.</p>
+                    <h5 class="fw-bold mb-3">hérbilia</h5>
+                    <p>Votre destination de confiance pour les rituels de soins et beauté au féminin. Nous sélectionnons les meilleurs ingrédients naturels pour sublimer votre éclat.</p>
                     <div class="social-links">
                         <a href="#" class="me-3"><i class="bi bi-facebook"></i></a>
                         <a href="#" class="me-3"><i class="bi bi-twitter"></i></a>
@@ -566,28 +567,111 @@
     <!-- Cart Modal -->
     <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="cartModalLabel"><i class="bi bi-cart3"></i> Votre Panier</h5>
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-white border-bottom-0 pb-0">
+                    <h5 class="modal-title fw-bold" id="cartModalLabel">
+                        <i class="bi bi-cart3 text-primary me-2"></i>
+                        <span id="modalTitle">Votre Panier</span>
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <div id="cartModalItems">
-                        <!-- Cart items will be loaded here -->
-                    </div>
-                    <div class="cart-modal-footer mt-4 pt-3 border-top">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <span class="h5 mb-0 fw-bold">Total</span>
-                            <span class="h4 mb-0 fw-bold text-primary" id="cartModalTotal">0.00 DH</span>
+                <div class="modal-body p-4">
+                    <!-- Cart View -->
+                    <div id="cartView">
+                        <div id="cartModalItems" class="mb-4">
+                            <!-- Cart items will be loaded here -->
                         </div>
+                        
+                        <div class="cart-summary p-3 rounded-4 bg-light mb-4">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Sous-total</span>
+                                <span class="fw-bold" id="cartModalSubtotal">0.00 DH</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Livraison</span>
+                                <span class="text-success fw-medium">Gratuite</span>
+                            </div>
+                            <hr class="my-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h5 mb-0 fw-bold">Total</span>
+                                <span class="h4 mb-0 fw-bold text-primary" id="cartModalTotal">0.00 DH</span>
+                            </div>
+                        </div>
+
                         <div class="d-grid gap-2">
-                            <button class="btn btn-primary btn-lg rounded-pill fw-bold py-3" onclick="showPage('checkout'); resetModals()">
+                            <button id="checkoutModalBtn" class="btn btn-primary btn-lg rounded-pill fw-bold py-3 shadow-sm" onclick="showCheckoutInModal()">
                                 <i class="bi bi-bag-check me-2"></i> Commander maintenant
                             </button>
                             <button class="btn btn-link text-muted text-decoration-none small" data-bs-dismiss="modal">
                                 Continuer mes achats
                             </button>
                         </div>
+                    </div>
+
+                    <!-- Checkout View -->
+                    <div id="checkoutView" class="d-none">
+                        <div class="mb-4">
+                            <button class="btn btn-link text-decoration-none p-0 mb-3" onclick="showCartInModal()">
+                                <i class="bi bi-arrow-left"></i> Retour au panier
+                            </button>
+                            <h6 class="fw-bold mb-3">Résumé de la commande</h6>
+                            <div id="checkoutModalItems" class="mb-3">
+                                <!-- Checkout items will be loaded here -->
+                            </div>
+                            <div class="p-3 rounded-4 bg-light mb-4">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted small">Sous-total</span>
+                                    <span class="fw-bold small" id="checkoutModalSubtotal">0.00 DH</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted small">Livraison</span>
+                                    <span class="text-success fw-medium small" id="checkoutModalShipping">Gratuit</span>
+                                </div>
+                                <hr class="my-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-bold">Total</span>
+                                    <span class="h5 mb-0 fw-bold text-primary" id="checkoutModalTotal">0.00 DH</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form id="checkoutModalForm" onsubmit="event.preventDefault(); submitModalCheckout();">
+                            <h6 class="fw-bold mb-3">Informations de livraison</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label small">Nom complet</label>
+                                    <input type="text" class="form-control" name="customerName" placeholder="Ex: Jean Dupont" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label small">Téléphone</label>
+                                    <input type="tel" class="form-control" name="customerPhone" placeholder="Ex: 0612345678" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small">Email</label>
+                                <input type="email" class="form-control" name="customerEmail" placeholder="Ex: jean@example.com" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small">Adresse de livraison</label>
+                                <textarea class="form-control" name="shippingAddress" rows="2" placeholder="Votre adresse complète..." required></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8 mb-3">
+                                    <label class="form-label small">Ville</label>
+                                    <input type="text" class="form-control" name="city" placeholder="Ex: Casablanca" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label small">Code Postal</label>
+                                    <input type="text" class="form-control" name="zipCode" placeholder="20000" required>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" id="submitModalCheckoutBtn" class="btn btn-primary btn-lg rounded-pill fw-bold py-3 shadow-sm">
+                                    <i class="bi bi-check-circle me-2"></i> Confirmer la commande
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

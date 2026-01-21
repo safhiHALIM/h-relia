@@ -722,7 +722,7 @@ function displayProductDetail(product) {
     document.getElementById('productBreadcrumb').textContent = product.name;
 
     // Initialize quantity input
-    const qtyInput = document.getElementById('quantity');
+    const qtyInput = document.getElementById('productQuantity');
     qtyInput.value = 1;
     qtyInput.min = 1;
     qtyInput.max = product.stock;
@@ -915,7 +915,7 @@ function goToSlide(index) {
  * Change quantity by +/- buttons
  */
 function changeQuantity(delta) {
-    const quantityInput = document.getElementById('quantity');
+    const quantityInput = document.getElementById('productQuantity');
     const currentValue = parseInt(quantityInput.value || '1');
     const newValue = Math.max(1, Math.min(currentProduct.stock, currentValue + delta));
     
@@ -936,7 +936,7 @@ function changeQuantity(delta) {
  * Handle manual input in quantity field (clamp 1..stock)
  */
 function handleQuantityInput(applyOnBlur = false) {
-    const quantityInput = document.getElementById('quantity');
+    const quantityInput = document.getElementById('productQuantity');
     if (!quantityInput || !currentProduct) return;
 
     let value = quantityInput.value.trim();
@@ -962,7 +962,7 @@ function handleQuantityInput(applyOnBlur = false) {
  * Update quantity buttons state
  */
 function updateQuantityButtons() {
-    const quantityInput = document.getElementById('quantity');
+    const quantityInput = document.getElementById('productQuantity');
     const decreaseBtn = document.querySelector('.quantity-decrease');
     const increaseBtn = document.querySelector('.quantity-increase');
     const addToCartBtn = document.querySelector('.add-to-cart-btn');
@@ -1019,7 +1019,7 @@ function updateQuantityButtons() {
 function addToCart() {
     if (!currentProduct) return;
     
-    const quantity = parseInt(document.getElementById('quantity').value);
+    const quantity = parseInt(document.getElementById('productQuantity').value);
     
     // Check stock availability
     if (currentProduct.stock <= 0) {
@@ -1445,7 +1445,7 @@ function showCheckoutInModal() {
     // Update modal title
     const modalTitle = document.getElementById('modalTitle');
     const modalIcon = document.querySelector('#cartModalLabel i');
-    modalTitle.textContent = 'Checkout';
+    modalTitle.textContent = 'Paiement';
     modalIcon.className = 'bi bi-credit-card';
     
     // Display checkout items and update totals
@@ -1464,7 +1464,7 @@ function showCartInModal() {
     // Update modal title
     const modalTitle = document.getElementById('modalTitle');
     const modalIcon = document.querySelector('#cartModalLabel i');
-    modalTitle.textContent = 'Shopping Cart';
+    modalTitle.textContent = 'Votre Panier';
     modalIcon.className = 'bi bi-cart3';
     
     // Refresh cart display
@@ -1536,7 +1536,7 @@ async function submitModalCheckout() {
     
     // Check if cart is not empty
     if (!cart || cart.length === 0) {
-        showAlert('Your cart is empty. Please add items before checkout.', 'warning');
+        showAlert('Votre panier est vide. Veuillez ajouter des articles avant de commander.', 'warning');
         return;
     }
     
@@ -1545,7 +1545,7 @@ async function submitModalCheckout() {
         const item = cart[i];
         if (!item.id || !item.quantity || !item.price) {
             console.error('Invalid cart item:', item);
-            showAlert('Invalid cart data. Please refresh the page and try again.', 'danger');
+            showAlert('Données du panier invalides. Veuillez rafraîchir la page et réessayer.', 'danger');
             return;
         }
     }
@@ -1556,7 +1556,7 @@ async function submitModalCheckout() {
     
     try {
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Processing...';
+        submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Traitement en cours...';
         
         orderData = {
             items: cart.map(item => ({
@@ -1760,24 +1760,21 @@ function displayCartModalItems() {
         <div class="cart-modal-item" data-product-id="${item.id}">
             <div class="row align-items-center">
                 <div class="col-3 col-md-2">
-                    <div class="position-relative">
-                        <img src="${item.image || '/images/placeholder.svg'}" 
-                             class="img-fluid rounded-3 shadow-sm" 
-                             alt="${item.name}" 
-                             style="aspect-ratio: 1; object-fit: cover;">
-                    </div>
+                    <img src="${item.image || '/images/placeholder.svg'}" 
+                         class="img-fluid" 
+                         alt="${item.name}">
                 </div>
                 <div class="col-9 col-md-5">
-                    <h6 class="mb-1 fw-bold text-dark">${item.name}</h6>
-                    <p class="text-accent small mb-0 fw-medium">${formatMAD(item.price)}</p>
+                    <h6 class="mb-1 item-name">${item.name}</h6>
+                    <p class="item-price small mb-0">${formatMAD(item.price)}</p>
                 </div>
                 <div class="col-8 col-md-4 mt-3 mt-md-0">
-                    <div class="d-flex align-items-center bg-light rounded-pill p-1" style="width: fit-content;">
-                        <button class="btn btn-sm btn-white rounded-circle shadow-sm" onclick="updateCartQuantity(${item.id}, -1)" style="width: 28px; height: 28px; padding: 0;">
+                    <div class="quantity-control">
+                        <button class="quantity-btn" onclick="updateCartQuantity(${item.id}, -1)">
                             <i class="bi bi-dash"></i>
                         </button>
                         <span class="mx-3 fw-bold small">${item.quantity}</span>
-                        <button class="btn btn-sm btn-white rounded-circle shadow-sm" onclick="updateCartQuantity(${item.id}, 1)" style="width: 28px; height: 28px; padding: 0;">
+                        <button class="quantity-btn" onclick="updateCartQuantity(${item.id}, 1)">
                             <i class="bi bi-plus"></i>
                         </button>
                     </div>
@@ -1786,12 +1783,6 @@ function displayCartModalItems() {
                     <button class="btn btn-link text-danger p-0" onclick="removeFromCart(${item.id})" title="Supprimer">
                         <i class="bi bi-trash fs-5"></i>
                     </button>
-                </div>
-            </div>
-            <div class="row mt-2">
-                <div class="col-12 text-end">
-                    <span class="text-muted small">Total: </span>
-                    <span class="fw-bold text-primary">${formatMAD(item.price * item.quantity)}</span>
                 </div>
             </div>
         </div>

@@ -67,18 +67,6 @@ CREATE TABLE IF NOT EXISTS order_items (
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
--- Create access_links table
-CREATE TABLE IF NOT EXISTS access_links (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    token_hash VARCHAR(64) UNIQUE NOT NULL,
-    status ENUM('active', 'used', 'revoked', 'expired') DEFAULT 'active',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMP NULL,
-    used_at TIMESTAMP NULL,
-    used_by_device VARCHAR(255) NULL,
-    revoked_at TIMESTAMP NULL
-);
-
 -- Insert admin user with CORRECT password hash for 'admin123'
 INSERT INTO users (name, email, password, role) VALUES 
 ('Admin User', 'admin@neosafi.com', '$2b$10$V/fBt7Q/B3fJG8wFKRpgH.KyJ2kQXtAMOIY80AhPCtThb8XCm23He', 'admin');
@@ -126,11 +114,6 @@ INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
 (2, 8, 1, 449.99),   -- Office Chair
 (3, 9, 1, 79.99),    -- Yoga Mat
 (3, 10, 1, 129.99);  -- Speaker
-
--- Insert sample access links
-INSERT INTO access_links (token_hash, status, created_at, expires_at) VALUES 
-('a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456', 'active', NOW(), DATE_ADD(NOW(), INTERVAL 24 HOUR)),
-('b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef1234567a', 'used', DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_ADD(NOW(), INTERVAL 22 HOUR));
 
 -- Verify the setup
 SELECT 'Database fixed successfully!' as Status;

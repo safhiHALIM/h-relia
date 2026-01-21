@@ -90,6 +90,81 @@
         .order-status-select.status-shipped:hover { box-shadow: 0 4px 12px rgba(63, 81, 181, 0.4); }
         .order-status-select.status-delivered:hover { box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4); }
         .order-status-select.status-cancelled:hover { box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4); }
+
+        /* Modern Styling for Search and Filter Sections */
+        .product-search-section, .order-search-section {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            background: #fff;
+        }
+
+        .product-search-section:hover, .order-search-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+        }
+
+        .product-search-header, .order-search-header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+            border: none;
+        }
+
+        .product-filter-label, .order-filter-label {
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .product-filter-label i, .order-filter-label i {
+            color: #2575fc;
+        }
+
+        .product-search-input-group, .order-search-input-group {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .product-search-input, .order-search-input, .product-filter-select, .order-filter-select {
+            border: 1px solid #e0e0e0;
+            padding: 10px 15px;
+            border-radius: 8px !important;
+            transition: all 0.2s ease;
+        }
+
+        .product-search-input:focus, .order-search-input:focus, .product-filter-select:focus, .order-filter-select:focus {
+            border-color: #2575fc;
+            box-shadow: 0 0 0 0.25rem rgba(37, 117, 252, 0.1);
+        }
+
+        .product-reset-btn, .order-reset-btn {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            color: #666;
+            border-radius: 8px;
+            padding: 10px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .product-reset-btn:hover, .order-reset-btn:hover {
+            background: #e9ecef;
+            color: #333;
+        }
+
+        .product-search-tip, .order-search-tip {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -98,10 +173,9 @@
         <div class="card shadow" style="width: 400px;">
             <div class="card-body p-4">
                 <div class="text-center mb-4">
-                    <h2 class="text-primary">
-                        <i class="bi bi-shield-lock"></i> Connexion Admin
-                    </h2>
-                    <p class="text-muted">Administration shop47</p>
+                    <img src="/logo.svg" alt="hérbilia" style="height:60px; width:auto; margin-bottom:15px;">
+                    <h2 class="text-primary">Connexion Admin</h2>
+                    <p class="text-muted">Administration hérbilia</p>
                 </div>
                 
                 <form id="adminLoginForm">
@@ -139,7 +213,7 @@
                 </button>
                 
                 <a class="navbar-brand" href="/">
-                    <i class="bi bi-flower1"></i> hérbilia Admin
+                    <img src="/logo1.png" alt="hérbilia" style="height:30px; width:auto; vertical-align:middle; margin-right:10px;"> hérbilia Admin
                 </a>
                 
                 <div class="navbar-nav ms-auto">
@@ -182,11 +256,7 @@
                                 <i class="bi bi-receipt"></i> Commandes
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" onclick="showAdminPage('access-links')">
-                                <i class="bi bi-link-45deg"></i> Liens d'accès
-                            </a>
-                        </li>
+
                     </ul>
                 </div>
 

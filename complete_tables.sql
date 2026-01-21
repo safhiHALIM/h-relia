@@ -55,18 +55,6 @@ CREATE TABLE IF NOT EXISTS order_items (
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
--- Create access_links table
-CREATE TABLE IF NOT EXISTS access_links (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    token_hash VARCHAR(64) UNIQUE NOT NULL,
-    status ENUM('active', 'used', 'revoked', 'expired') DEFAULT 'active',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMP NULL,
-    used_at TIMESTAMP NULL,
-    used_by_device VARCHAR(255) NULL,
-    revoked_at TIMESTAMP NULL
-);
-
 -- Insert default admin user (if not exists)
 INSERT IGNORE INTO users (name, email, password, role) VALUES 
 ('Admin User', 'admin@neosafi.com', '$2b$10$8K1p/a0dclxKoNGuDF/my.Uizm.JHueMiZjKjixbqCzHm5OHfyus6', 'admin');
@@ -143,16 +131,9 @@ INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
 -- Order 5: John's second purchase
 (5, 4, 1, 299.99);   -- Leather Jacket
 
--- Insert sample access links (for testing the unique link system)
-INSERT INTO access_links (token_hash, status, created_at, expires_at) VALUES 
-('a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456', 'active', NOW(), DATE_ADD(NOW(), INTERVAL 24 HOUR)),
-('b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef1234567a', 'used', DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_ADD(NOW(), INTERVAL 22 HOUR)),
-('c3d4e5f6789012345678901234567890abcdef1234567890abcdef1234567ab2', 'revoked', DATE_SUB(NOW(), INTERVAL 1 DAY), NULL);
-
 -- Show completion message
 SELECT 'All tables created and populated successfully!' as Status,
        (SELECT COUNT(*) FROM categories) as Categories,
        (SELECT COUNT(*) FROM products) as Products,
        (SELECT COUNT(*) FROM users) as Users,
-       (SELECT COUNT(*) FROM orders) as Orders,
-       (SELECT COUNT(*) FROM access_links) as AccessLinks;
+       (SELECT COUNT(*) FROM orders) as Orders;

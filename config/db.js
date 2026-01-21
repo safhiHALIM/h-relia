@@ -88,7 +88,7 @@ const initializeDatabase = async () => {
     }
     
     try {
-        const tables = ['users', 'categories', 'products', 'orders', 'order_items', 'access_links'];
+        const tables = ['users', 'categories', 'products', 'orders', 'order_items'];
         
         for (const table of tables) {
             const exists = await tableExists(table);

@@ -8,7 +8,6 @@
 -- Drop tables if they exist (for clean setup)
 DROP TABLE IF EXISTS order_items;
 DROP TABLE IF EXISTS orders;
-DROP TABLE IF EXISTS access_links;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS categories;
 DROP TABLE IF EXISTS users;
@@ -82,21 +81,6 @@ CREATE TABLE order_items (
     INDEX idx_product (product_id)
 );
 
--- Access links table (unique link system)
-CREATE TABLE access_links (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    token_hash VARCHAR(64) NOT NULL UNIQUE, -- SHA256 hash of the raw token
-    used_by_device VARCHAR(64) NULL, -- SHA256 hash of device fingerprint
-    status ENUM('active', 'used', 'expired', 'revoked') DEFAULT 'active',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMP NULL, -- NULL means no expiration
-    used_at TIMESTAMP NULL,
-    INDEX idx_token_hash (token_hash),
-    INDEX idx_status (status),
-    INDEX idx_expires (expires_at),
-    INDEX idx_created (created_at)
-);
-
 -- Insert sample data
 
 -- Insert admin user (password: admin123)
@@ -138,15 +122,9 @@ INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
 (1, 4, 1, 49.99),
 (2, 4, 1, 79.99);
 
--- Insert sample access link (for testing - token: "test1234567890abcdef1234567890abcd")
--- Token hash is SHA256 of the above token
-INSERT INTO access_links (token_hash, status, expires_at) VALUES 
-('a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'active', DATE_ADD(NOW(), INTERVAL 24 HOUR));
-
 -- Create indexes for better performance
 CREATE INDEX idx_products_search ON products(name, description);
 CREATE INDEX idx_orders_date_status ON orders(created_at, status);
-CREATE INDEX idx_access_links_lookup ON access_links(token_hash, status, expires_at);
 
 -- Display table information
 SELECT 'Database schema created successfully!' as message;
@@ -163,6 +141,4 @@ SELECT 'Products', COUNT(*) FROM products
 UNION ALL
 SELECT 'Orders', COUNT(*) FROM orders
 UNION ALL
-SELECT 'Order Items', COUNT(*) FROM order_items
-UNION ALL
-SELECT 'Access Links', COUNT(*) FROM access_links;
+SELECT 'Order Items', COUNT(*) FROM order_items;

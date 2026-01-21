@@ -2355,10 +2355,11 @@ function generateReceiptHTML(order, orderItems) {
     </head>
     <body>
         <div class="header">
-            <div class="store-name">🛍️ shop47</div>
+            <img src="/logo1.png" alt="hérbilia" style="height: 50px; margin-bottom: 10px;">
+            <div class="store-name">hérbilia</div>
             <div class="store-info">
-                Électronique Moderne - Qualité Premium<br>
-                Email: contact@neosafistore.com | Tél: +33 1 23 45 67 89
+                Soins & Beauté au Féminin - Qualité Premium<br>
+                Email: contact@herbilia.com | Tél: +212 6 00 00 00 00
             </div>
         </div>
 
@@ -2428,8 +2429,8 @@ function generateReceiptHTML(order, orderItems) {
 
         <div class="footer">
             <p><strong>Merci pour votre commande !</strong></p>
-            <p>Pour toute question, contactez-nous à contact@shop47.com</p>
-            <p>shop47 - Votre partenaire technologique de confiance</p>
+            <p>Pour toute question, contactez-nous à contact@herbilia.com</p>
+            <p>hérbilia - Votre rituel de beauté au naturel</p>
         </div>
     </body>
     </html>
@@ -2998,8 +2999,8 @@ async function printOrder(orderId) {
                     // Fermer la fenêtre après un délai pour laisser le temps à l'impression
                     setTimeout(() => {
                         printWindow.close();
-                    }, 1000);
-                }, 500);
+                    }, 2000); // Augmenté à 2s
+                }, 1000); // Augmenté à 1s pour le chargement du logo
             };
             
             // Fallback si onload ne fonctionne pas
@@ -3165,7 +3166,7 @@ function generateOrderDetailsHTML(order) {
                                             <strong>${item.product_name || 'N/A'}</strong>
                                             ${item.product_description ? `<br><small class="text-muted">${item.product_description}</small>` : ''}
                                         </td>
-                                        <td>${formatMAD(item.price || 0)}</td>
+                                        <td>${formatMAD(item.product_price || 0)}</td>
                                         <td>
                                             <span class="badge bg-secondary">${item.quantity || 0}</span>
                                         </td>
@@ -3204,7 +3205,7 @@ function generateOrderPrintHTML(order) {
         <html>
         <head>
             <meta charset="UTF-8">
-            <title>Commande #${order.id} - NeoSafi Store</title>
+            <title>Commande #${order.id} - hérbilia</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -3303,7 +3304,8 @@ function generateOrderPrintHTML(order) {
         </head>
         <body>
             <div class="header">
-                <div class="company-name">🛍️ shop47</div>
+                <img src="${window.location.origin}/logo1.png" alt="hérbilia" style="height: 80px; margin-bottom: 15px;">
+                <div class="company-name" style="color: #6a11cb;">hérbilia</div>
                 <div class="order-title">Facture - Commande #${order.id}</div>
                 <div>
                     <span class="status-badge status-${statusClass}">
@@ -3353,7 +3355,7 @@ function generateOrderPrintHTML(order) {
                                 <strong>${item.product_name || 'N/A'}</strong>
                                 ${item.product_description ? `<br><small>${item.product_description}</small>` : ''}
                             </td>
-                            <td>${formatMAD(item.price || 0)}</td>
+                            <td>${formatMAD(item.product_price || 0)}</td>
                             <td>${item.quantity || 0}</td>
                             <td class="text-right">${formatMAD(item.subtotal || 0)}</td>
                         </tr>
@@ -3382,8 +3384,8 @@ function generateOrderPrintHTML(order) {
 
             <div class="footer">
                 <p><strong>Merci pour votre commande !</strong></p>
-                <p>Pour toute question, contactez-nous à contact@neosafistore.com</p>
-                <p>NeoSafi Store - Votre partenaire technologique de confiance</p>
+                <p>Pour toute question, contactez-nous à contact@herbilia.com</p>
+                <p>hérbilia - Votre rituel de beauté au naturel</p>
             </div>
         </body>
         </html>
