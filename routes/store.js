@@ -237,10 +237,9 @@ router.get('/products', async (req, res) => {
 
         const query = `
             SELECT p.*, c.name as category_name,
-                   pi.image_url as primary_image
+                   (SELECT pi.image_url FROM product_images pi WHERE pi.product_id = p.id AND pi.is_primary = TRUE LIMIT 1) as primary_image
             FROM products p 
             LEFT JOIN categories c ON p.category_id = c.id 
-            LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_primary = TRUE
             ${whereClause}
             ORDER BY p.created_at DESC 
             LIMIT ? OFFSET ?
@@ -384,8 +383,14 @@ router.post('/admin/products', isAdmin, uploadMultiple, async (req, res) => {
 
         // Save multiple images if provided
         if (req.files && req.files.length > 0) {
-            const primaryIndex = parseInt(primaryImageIndex) || 0;
-            await saveProductImages(productId, req.files, primaryIndex);
+            // Log files for debugging
+            console.log('🖼️ Uploaded files:', req.files);
+            // Always clean up any existing images for a new product (should be none, but for safety)
+            await deleteProductImages(productId);
+            const primaryIndex = Number.isInteger(parseInt(primaryImageIndex)) ? parseInt(primaryImageIndex) : 0;
+            // Remove undefined/empty files and files with size 0
+            const validFiles = req.files.filter(f => f && f.filename && f.size && f.size > 0);
+            await saveProductImages(productId, validFiles, primaryIndex);
         }
 
         logActivity('PRODUCT_CREATED', { productId, name }, req.session.user.id);
@@ -414,28 +419,30 @@ router.put('/admin/products/:id', isAdmin, uploadMultiple, async (req, res) => {
 
         // Handle images if provided
         if (req.files && req.files.length > 0) {
+            // Log files for debugging
+            console.log('🖼️ Uploaded files:', req.files);
             if (replaceImages === 'true') {
                 // Replace all existing images
                 await deleteProductImages(productId);
-                const primaryIndex = parseInt(primaryImageIndex) || 0;
-                await saveProductImages(productId, req.files, primaryIndex);
+                const primaryIndex = Number.isInteger(parseInt(primaryImageIndex)) ? parseInt(primaryImageIndex) : 0;
+                const validFiles = req.files.filter(f => f && f.filename && f.size && f.size > 0);
+                await saveProductImages(productId, validFiles, primaryIndex);
             } else {
                 // Add new images to existing ones
                 const existingImages = await getProductImages(productId);
                 const startOrder = existingImages.length;
-                const primaryIndex = parseInt(primaryImageIndex) || 0;
-                
-                const imagePromises = req.files.map(async (file, index) => {
+                const primaryIndex = Number.isInteger(parseInt(primaryImageIndex)) ? parseInt(primaryImageIndex) : 0;
+                const validFiles = req.files.filter(f => f && f.filename && f.size && f.size > 0);
+                const imagePromises = validFiles.map(async (file, index) => {
                     const imageUrl = `/uploads/${file.filename}`;
+                    // Only set as primary if there are no existing images and this is the primary index
                     const isPrimary = existingImages.length === 0 && index === primaryIndex;
                     const sortOrder = startOrder + index;
-                    
                     return executeQuery(
                         'INSERT INTO product_images (product_id, image_url, is_primary, sort_order) VALUES (?, ?, ?, ?)',
                         [productId, imageUrl, isPrimary, sortOrder]
                     );
                 });
-                
                 await Promise.all(imagePromises);
             }
         }
@@ -1296,47 +1303,33 @@ router.delete('/admin/categories/:id', isAdmin, async (req, res) => {
 router.get('/admin/categories/icons', isAdmin, async (req, res) => {
     try {
         const icons = [
-            // Électronique
-            { category: 'Électronique', icons: [
-                'bi-phone', 'bi-laptop', 'bi-tablet', 'bi-smartwatch', 'bi-headphones',
-                'bi-camera', 'bi-tv', 'bi-speaker', 'bi-mouse', 'bi-keyboard',
-                'bi-usb-plug', 'bi-battery', 'bi-cpu', 'bi-memory', 'bi-router',
-                'bi-controller', 'bi-joystick', 'bi-webcam', 'bi-printer', 'bi-scanner'
+            // Soins & Beauté
+            { category: 'Soins & Beauté', icons: [
+                'bi-magic', 'bi-stars', 'bi-sparkles', 'bi-droplet', 'bi-droplet-half',
+                'bi-person-hearts', 'bi-suit-heart', 'bi-brush', 'bi-palette', 'bi-scissors',
+                'bi-heart', 'bi-heart-fill', 'bi-gender-female', 'bi-gem', 'bi-lightning-charge'
             ]},
-            // Commerce
-            { category: 'Commerce', icons: [
-                'bi-shop', 'bi-cart', 'bi-bag', 'bi-credit-card', 'bi-cash',
-                'bi-receipt', 'bi-tag', 'bi-tags', 'bi-percent', 'bi-gift'
+            // Nature & Bien-être
+            { category: 'Nature & Bien-être', icons: [
+                'bi-leaf', 'bi-flower1', 'bi-flower2', 'bi-flower3', 'bi-tree',
+                'bi-moisture', 'bi-wind', 'bi-sun', 'bi-cloud-sun', 'bi-water',
+                'bi-brightness-high', 'bi-cup-hot', 'bi-peace', 'bi-patch-check'
             ]},
-            // Mode & Beauté
-            { category: 'Mode & Beauté', icons: [
-                'bi-person-fill', 'bi-suit-heart', 'bi-eyeglasses', 'bi-watch',
-                'bi-gem', 'bi-palette', 'bi-brush', 'bi-scissors', 'bi-heart'
+            // Commerce & Cadeaux
+            { category: 'Commerce & Cadeaux', icons: [
+                'bi-shop', 'bi-shop-window', 'bi-bag', 'bi-bag-heart', 'bi-bag-check',
+                'bi-cart', 'bi-cart-check', 'bi-gift', 'bi-gift-fill', 'bi-tag',
+                'bi-tags', 'bi-percent', 'bi-credit-card', 'bi-cash', 'bi-receipt'
             ]},
-            // Maison & Jardin
-            { category: 'Maison & Jardin', icons: [
-                'bi-house', 'bi-door-open', 'bi-lamp', 'bi-lightbulb', 'bi-thermometer',
-                'bi-flower1', 'bi-tree', 'bi-tools', 'bi-hammer', 'bi-wrench'
-            ]},
-            // Sport & Loisirs
-            { category: 'Sport & Loisirs', icons: [
-                'bi-trophy', 'bi-bicycle', 'bi-football', 'bi-basketball', 'bi-tennis-ball',
-                'bi-dumbbell', 'bi-heart-pulse', 'bi-stopwatch', 'bi-compass', 'bi-backpack'
-            ]},
-            // Transport
-            { category: 'Transport', icons: [
-                'bi-car-front', 'bi-truck', 'bi-bicycle', 'bi-scooter', 'bi-airplane',
-                'bi-train-front', 'bi-bus-front', 'bi-fuel-pump', 'bi-speedometer2'
-            ]},
-            // Alimentation
-            { category: 'Alimentation', icons: [
-                'bi-cup-hot', 'bi-egg-fried', 'bi-apple', 'bi-cake2', 'bi-wine',
-                'bi-basket', 'bi-shop-window', 'bi-cookie', 'bi-ice-cream'
+            // Maison & Hammam
+            { category: 'Maison & Hammam', icons: [
+                'bi-house', 'bi-door-open', 'bi-lamp', 'bi-lightbulb', 'bi-box-seam',
+                'bi-archive', 'bi-calendar-event', 'bi-clock', 'bi-geo-alt', 'bi-pin'
             ]},
             // Général
             { category: 'Général', icons: [
-                'bi-star', 'bi-bookmark', 'bi-flag', 'bi-globe', 'bi-puzzle',
-                'bi-book', 'bi-journal', 'bi-music-note', 'bi-film', 'bi-image'
+                'bi-star', 'bi-star-fill', 'bi-bookmark', 'bi-bookmark-heart', 'bi-flag',
+                'bi-globe', 'bi-puzzle', 'bi-book', 'bi-journal', 'bi-image'
             ]}
         ];
         

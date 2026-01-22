@@ -23,7 +23,10 @@
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
             <a class="navbar-brand fw-bold" href="/">
-                <img src="/logo.svg" alt="hérbilia" style="height:40px; width:auto; vertical-align:middle; margin-right:10px;"> hérbilia
+                                <span style="display:flex;align-items:center;gap:10px;min-height:44px;">
+                                    <img src="/public/images/logo.png" alt="hérbilia" style="height:62px; width:auto; vertical-align:middle; margin-right:10px; filter: drop-shadow(0 2px 4px #e8b4bc88);">
+                                    <span style="font-family:'Playfair Display',serif; font-size:2rem; font-weight:900; letter-spacing:1px; color:#C96A7D; text-shadow:0 1px 2px #fff;">hérbilia</span>
+                                </span>
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -135,66 +138,115 @@
 
             
 
-            <!-- Zencoder AI Assistant Section -->
-            <section class="zencoder-section py-5">
+            <!-- MVC Style Content Section -->
+            <section class="mvc-section">
                 <div class="container">
-                    <div class="row align-items-center">
-                        <div class="col-lg-6 mb-4 mb-lg-0" data-aos="fade-right">
-                            <div class="zencoder-badge mb-3">
-                                <i class="fa-solid fa-microchip"></i> AI Expertise by Zencoder
-                            </div>
-                            <h2 class="section-title mb-4">Votre Rituel Personnalisé par l'IA</h2>
-                            <p class="lead mb-4">Laissez l'intelligence de Zencoder analyser vos besoins pour créer une routine de soin sur mesure.</p>
-                            <div class="zencoder-features">
-                                <div class="feature-item d-flex mb-3">
-                                    <div class="feature-icon me-3">
-                                        <i class="fa-solid fa-check-circle text-primary"></i>
-                                    </div>
-                                    <div>
-                                        <h5 class="mb-1">Analyse Cutanée Intelligente</h5>
-                                        <p class="text-muted small">Diagnostic précis basé sur vos préférences et votre type de peau.</p>
-                                    </div>
-                                </div>
-                                <div class="feature-item d-flex mb-3">
-                                    <div class="feature-icon me-3">
-                                        <i class="fa-solid fa-check-circle text-primary"></i>
-                                    </div>
-                                    <div>
-                                        <h5 class="mb-1">Recommandations Prédictives</h5>
-                                        <p class="text-muted small">Anticipez les besoins de votre peau selon les saisons.</p>
-                                    </div>
+                    <div class="mvc-container-relative">
+                        <!-- Minimalist Navigation Buttons -->
+                        <button class="mvc-nav-btn prev" onclick="manualScroll('prev')" aria-label="Précédent">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <button class="mvc-nav-btn next" onclick="manualScroll('next')" aria-label="Suivant">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+
+                        <div class="mvc-scroll-wrapper" id="mvcScroll">
+                            <!-- French Card -->
+                            <div class="mvc-card">
+                                <h4>🌿 Français</h4>
+                                <div class="mvc-card-content">
+                                    Herbélia est une marque marocaine spécialisée dans les soins corporels naturels pour femmes, inspirée des rituels ancestraux de beauté à base de plantes. Nos produits sont fabriqués artisanalement avec passion, à partir de plus de 30 plantes naturelles marocaines soigneusement sélectionnées pour leurs bienfaits.
+                                    <br><br>
+                                    Notre soin signature, Tabrima, est un rituel corporel complet conçu pour purifier, nourrir, hydrater et sublimer la peau de manière naturelle. Sans produits chimiques ni additifs artificiels, Herbélia offre une expérience de soin à la fois efficace, saine et luxueuse.
+                                    <br><br>
+                                    Notre ambition est de valoriser le savoir-faire marocain à travers des soins naturels haut de gamme, alliant tradition, qualité et élégance moderne, pour accompagner les femmes dans leur rituel de bien-être quotidien.
                                 </div>
                             </div>
-                            <button class="btn btn-primary mt-4">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i> Démarrer la Consultation IA
-                            </button>
-                        </div>
-                        <div class="col-lg-6" data-aos="fade-left">
-                            <div class="zencoder-card shadow-lg border-0 rounded-4 overflow-hidden">
-                                <div class="zencoder-header p-3 border-bottom d-flex align-items-center bg-white">
-                                    <div class="zencoder-dot me-2 bg-success rounded-circle" style="width: 10px; height: 10px;"></div>
-                                    <span class="fw-bold">Zencoder Assistant</span>
+
+                            <!-- Arabic Card -->
+                            <div class="mvc-card rtl">
+                                <h4>🌿 العربية</h4>
+                                <div class="mvc-card-content">
+                                    Herbélia هي علامة مغربية متخصصة فـ العناية الطبيعية بالجسم للنساء، مستوحاة من الطقوس التقليدية ديال الجمال المغربي لي كتورّث من جيل لجيل. كنآمنو بأن الجمال الحقيقي كيبدأ من الطبيعة، وعلّاش صايبنا منتوجاتنا بيدّينا وبعناية كبيرة، باستعمال أكثر من 30 عشبة مغربية طبيعية مختارة بدقة.
+                                    <br><br>
+                                    منتوجنا الأول تبريمة هو طقس عناية متكامل، مستوحى من وصفات الجدّات، كيساعد على تنقية البشرة، تغذيتها، ترطيبها وتحسين ملمسها بطريقة طبيعية وآمنة. كل تركيبة ديال Herbélia كتجمع entre الأصالة المغربية، الفعالية، والفخامة، بلا مواد كيماوية ولا إضافات مضرة.
+                                    <br><br>
+                                    الهدف ديالنا هو نقدّمو تجربة عناية فاخرة للمرأة، تعيد لها الثقة فالجمال الطبيعي، وتربطها بجذورها، من خلال منتوجات طبيعية، حرفية، وصحية مصنوعة بكل حب داخل المغرب.
                                 </div>
-                                <div class="zencoder-body p-4" style="min-height: 300px; background-color: var(--secondary-color) !important;">
-                                    <div class="message incoming mb-3 p-3 bg-white rounded-3 shadow-sm border" style="max-width: 85%;">
-                                        "Bonjour ! Je suis Zencoder, votre assistant beauté IA. Quelle est votre préoccupation principale aujourd'hui ?"
-                                    </div>
-                                    <div class="message outgoing mb-3 p-3 text-white rounded-3 shadow-sm ms-auto" style="max-width: 85%; background-color: var(--primary-color);">
-                                        "Je cherche une routine pour peau sensible et éclat."
-                                    </div>
-                                    <div class="message incoming mb-3 p-3 bg-white rounded-3 shadow-sm border" style="max-width: 85%;">
-                                        "Parfait. Basé sur mon analyse, je vous recommande le Rituel d'Orient à la Rose de Damas..."
-                                    </div>
-                                </div>
-                                <div class="zencoder-footer p-3 border-top bg-white d-flex align-items-center">
-                                    <div class="input-placeholder text-muted flex-grow-1">Tapez votre message ici...</div>
-                                    <i class="fa-solid fa-paper-plane text-primary ms-2" style="cursor: pointer; font-size: 1.2rem;"></i>
+                            </div>
+
+                            <!-- English Card -->
+                            <div class="mvc-card">
+                                <h4>🌿 English</h4>
+                                <div class="mvc-card-content">
+                                    Herbélia est une marque marocaine spécialisée dans les soins corporels naturels pour femmes, inspirée des rituels ancestraux de beauté à base de plantes. Nos produits sont fabriqués artisanalement avec passion, à partir de plus de 30 plantes naturelles marocaines soigneusement sélectionnées pour leurs bienfaits.
+                                    <br><br>
+                                    Notre soin signature, Tabrima, est un rituel corporel complet conçu pour purifier, nourrir, hydrater et sublimer la peau de manière naturelle. Sans produits chimiques ni additifs artificiels, Herbélia offre une expérience de soin à la fois efficace, saine et luxueuse.
+                                    <br><br>
+                                    Notre mission est de valoriser le savoir-faire marocain à travers des soins naturels haut de gamme, alliant tradition, qualité et élégance moderne, pour accompagner les femmes dans leur rituel de bien-être quotidien.
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
+
+            <script>
+                let autoScrollInterval;
+                let scrollDirection = 1;
+                const wrapper = document.getElementById('mvcScroll');
+
+                function startAutoScroll() {
+                    stopAutoScroll();
+                    autoScrollInterval = setInterval(() => {
+                        performScroll();
+                    }, 5000);
+                }
+
+                function stopAutoScroll() {
+                    clearInterval(autoScrollInterval);
+                }
+
+                function performScroll() {
+                    const maxScroll = wrapper.scrollWidth - wrapper.clientWidth;
+                    if (scrollDirection === 1) {
+                        if (wrapper.scrollLeft >= maxScroll - 10) {
+                            scrollDirection = -1;
+                            wrapper.scrollBy({ left: -wrapper.clientWidth, behavior: 'smooth' });
+                        } else {
+                            wrapper.scrollBy({ left: wrapper.clientWidth, behavior: 'smooth' });
+                        }
+                    } else {
+                        if (wrapper.scrollLeft <= 10) {
+                            scrollDirection = 1;
+                            wrapper.scrollBy({ left: wrapper.clientWidth, behavior: 'smooth' });
+                        } else {
+                            wrapper.scrollBy({ left: -wrapper.clientWidth, behavior: 'smooth' });
+                        }
+                    }
+                }
+
+                function manualScroll(direction) {
+                    stopAutoScroll();
+                    const scrollAmount = wrapper.clientWidth;
+                    if (direction === 'next') {
+                        wrapper.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                        scrollDirection = 1;
+                    } else {
+                        wrapper.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                        scrollDirection = -1;
+                    }
+                    setTimeout(startAutoScroll, 10000);
+                }
+
+                document.addEventListener('DOMContentLoaded', () => {
+                    wrapper.addEventListener('mouseenter', stopAutoScroll);
+                    wrapper.addEventListener('mouseleave', startAutoScroll);
+                    wrapper.addEventListener('touchstart', stopAutoScroll);
+                    startAutoScroll();
+                });
+            </script>
+
 
             <!-- Catégories Électroniques -->
             <section class="categories-section py-5">
@@ -519,47 +571,52 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="footer bg-dark text-white pt-5 pb-4">
-        <div class="container">
-            <div class="row gy-4">
-                <div class="col-lg-4">
-                    <h5 class="fw-bold mb-3">hérbilia</h5>
-                    <p>Votre destination de confiance pour les rituels de soins et beauté au féminin. Nous sélectionnons les meilleurs ingrédients naturels pour sublimer votre éclat.</p>
-                    <div class="social-links">
-                        <a href="#" class="me-3"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="me-3"><i class="bi bi-twitter"></i></a>
-                        <a href="#" class="me-3"><i class="bi bi-instagram"></i></a>
-                        <a href="#" class="me-3"><i class="bi bi-linkedin"></i></a>
+    <!-- Minimalist Footer -->
+    <footer class="footer pt-4">
+        <div class="container pb-3">
+            <div class="row gy-4 align-items-center">
+                <div class="col-lg-4 text-center text-lg-start">
+                    <span class="footer-logo-text" style="font-size: 1.8rem; margin-bottom: 0.5rem;">hérbilia</span>
+                    <p class="small mb-3" style="color: rgba(255,255,255,0.6); max-width: 300px; margin: 0 auto 0 0;">
+                        Soins premium inspirés des rituels de beauté ancestraux marocains.
+                    </p>
+                    <div class="d-flex justify-content-center justify-content-lg-start gap-2">
+                        <a href="#" class="footer-social-link" style="width: 32px; height: 32px; font-size: 0.9rem;"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="footer-social-link" style="width: 32px; height: 32px; font-size: 0.9rem;"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="footer-social-link" style="width: 32px; height: 32px; font-size: 0.9rem;"><i class="bi bi-tiktok"></i></a>
                     </div>
                 </div>
-                <div class="col-lg-3">
-                    <h5 class="fw-bold mb-3">Catégories</h5>
-                    <ul class="list-unstyled" id="footerCategories">
-                        <!-- Categories will be loaded here -->
+                
+                <div class="col-lg-4 text-center">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item mx-2"><a href="#" class="footer-link small" onclick="showPage('home')">Accueil</a></li>
+                        <li class="list-inline-item mx-2"><a href="#" class="footer-link small" onclick="showPage('catalog')">Boutique</a></li>
+                        <li class="list-inline-item mx-2"><a href="#" class="footer-link small">À propos</a></li>
+                        <li class="list-inline-item mx-2"><a href="#" class="footer-link small">Contact</a></li>
                     </ul>
                 </div>
-                <div class="col-lg-3">
-                    <h5 class="fw-bold mb-3">Service Client</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-white text-decoration-none">FAQs</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Livraison</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Retours</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Support</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-2">
-                    <h5 class="fw-bold mb-3">Contact</h5>
-                    <ul class="list-unstyled">
-                        <li><i class="bi bi-telephone"></i> +33 1 23 45 67 89</li>
-                        <li><i class="bi bi-envelope"></i> support@shop47.com</li>
-                        <li><i class="bi bi-geo-alt"></i> Paris, France</li>
-                    </ul>
+                
+                <div class="col-lg-4 text-center text-lg-end">
+                    <div class="small" style="color: rgba(255,255,255,0.7);">
+                        <i class="bi bi-envelope me-1"></i> contact@herbilia.ma<br>
+                        <i class="bi bi-geo-alt me-1"></i> Casablanca, Maroc
+                    </div>
                 </div>
             </div>
-            <hr class="border-light my-4">
-            <div class="text-center">
-                <p class="mb-0">© <span id="currentYear"></span> shop47. Tous droits réservés.</p>
+        </div>
+        
+        <div class="footer-bottom py-3" style="border-top: 1px solid rgba(255,255,255,0.05);">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6 text-center text-md-start">
+                        <p class="mb-0 x-small text-white-50">© <span id="currentYear"></span> hérbilia. Tous droits réservés.</p>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end mt-2 mt-md-0">
+                        <img src="https://img.icons8.com/color/24/000000/visa.png" class="me-1" alt="Visa">
+                        <img src="https://img.icons8.com/color/24/000000/mastercard.png" class="me-1" alt="Mastercard">
+                        <img src="https://img.icons8.com/color/24/000000/amex.png" alt="Amex">
+                    </div>
+                </div>
             </div>
         </div>
     </footer>

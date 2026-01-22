@@ -173,9 +173,7 @@
         <div class="card shadow" style="width: 400px;">
             <div class="card-body p-4">
                 <div class="text-center mb-4">
-                    <img src="/logo.svg" alt="hérbilia" style="height:60px; width:auto; margin-bottom:15px;">
-                    <h2 class="text-primary">Connexion Admin</h2>
-                    <p class="text-muted">Administration hérbilia</p>
+                    <img src="/public/images/logo.png" style="height:60px; width:auto; margin-bottom:15px;">
                 </div>
                 
                 <form id="adminLoginForm">
@@ -213,7 +211,10 @@
                 </button>
                 
                 <a class="navbar-brand" href="/">
-                    <img src="/logo1.png" alt="hérbilia" style="height:30px; width:auto; vertical-align:middle; margin-right:10px;"> hérbilia Admin
+                    <span style="display:flex;align-items:center;gap:10px;min-height:44px;">
+                        <img src="/public/images/logo.png" alt="Logo" style="height:38px;width:auto;">
+                        <span style="font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; letter-spacing:1px; color:#C96A7D; text-shadow:0 1px 2px #fff;">hérbilia <span style="font-size:1.1rem; font-weight:600; color:#888;">panel</span></span>
+                    </span>
                 </a>
                 
                 <div class="navbar-nav ms-auto">
@@ -973,7 +974,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-primary" onclick="saveProduct()">Sauvegarder le produit</button>
+                    <button type="submit" form="productForm" class="btn btn-primary">Sauvegarder le produit</button>
                 </div>
             </div>
         </div>
@@ -1179,6 +1180,20 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Preview Modal -->
+    <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 bg-transparent">
+                <div class="modal-header border-0 p-0 position-absolute top-0 end-0 z-3">
+                    <button type="button" class="btn-close btn-close-white bg-dark p-3 m-3 shadow-lg" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0 text-center">
+                    <img id="previewModalImage" src="" alt="Preview" class="img-fluid rounded shadow-lg" style="max-height: 90vh;">
                 </div>
             </div>
         </div>

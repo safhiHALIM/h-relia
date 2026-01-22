@@ -6,8 +6,7 @@
 // Global state
 let currentAdmin = null;
 let currentAdminPage = 'dashboard';
-let products = [];
-let orders = [];
+// ...existing code...
 let accessLinks = [];
 let categories = [];
 
@@ -56,11 +55,17 @@ async function initializeAdminApp() {
  * Set up event listeners
  */
 function setupAdminEventListeners() {
-    // Admin login form
-    document.getElementById('adminLoginForm').addEventListener('submit', handleAdminLogin);
+    // Utiliser uniquement l'événement submit du formulaire
+    const productForm = document.getElementById('productForm');
+    if (productForm) {
+        productForm.addEventListener('submit', handleProductSubmit);
+    }
     
-    // Product form
-    document.getElementById('productForm').addEventListener('submit', handleProductSubmit);
+    // Admin login form
+    const loginForm = document.getElementById('adminLoginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleAdminLogin);
+    }
     
     // Generate link form
     document.getElementById('generateLinkForm').addEventListener('submit', handleGenerateLink);
@@ -485,6 +490,11 @@ async function loadCategories() {
         if (data.success) {
             categories = data.categories;
             updateCategorySelects();
+            
+            // Sync dashboard stats if elements exist
+            if (document.getElementById('totalCategories')) {
+                document.getElementById('totalCategories').textContent = categories.length;
+            }
         }
     } catch (error) {
         console.error('Error loading categories:', error);
@@ -684,26 +694,39 @@ async function handleProductSubmit(event) {
     event.preventDefault();
     
     const formData = new FormData(event.target);
+    // Nettoyer les fichiers non-images ou vides
+    const imageInput = document.getElementById('productImages');
+    if (imageInput && imageInput.files) {
+        // Toujours retirer le champ images du FormData (évite d'envoyer un champ vide)
+        formData.delete('images');
+        // Ajouter uniquement les fichiers valides
+        let validImageCount = 0;
+        Array.from(imageInput.files).forEach(file => {
+            if (file && file.type.startsWith('image/') && file.size > 0) {
+                formData.append('images', file);
+                validImageCount++;
+            }
+        });
+        // Si aucun fichier valide, s'assurer qu'aucun champ images n'est envoyé
+        if (validImageCount === 0) {
+            formData.delete('images');
+        }
+    }
     const productId = formData.get('productId');
     const isEdit = productId && productId !== '';
-    
     try {
         const url = isEdit ? `/api/admin/products/${productId}` : '/api/admin/products';
         const method = isEdit ? 'PUT' : 'POST';
-        
         const response = await fetch(url, {
             method: method,
             body: formData
         });
-        
         const data = await response.json();
-        
         if (data.success) {
             bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
             showAlert(`Product ${isEdit ? 'updated' : 'created'} successfully!`, 'success');
             loadProducts();
             event.target.reset();
-            
             // Clear image previews
             const previewContainer = document.getElementById('imagePreviewContainer');
             const primarySelection = document.getElementById('primaryImageSelection');
@@ -1099,8 +1122,10 @@ async function loadProducts() {
         const data = await tryFetchJson('/api/products?limit=1000');
         
         if (data.success) {
+            // Réinitialisation explicite pour éviter les doublons en mémoire
+            allProducts = []; 
             allProducts = data.products;
-            filteredProducts = [...allProducts]; // Copie pour le filtrage
+            filteredProducts = [...allProducts];
             displayProductsTable(filteredProducts);
             updateProductCounts();
             loadCategoriesForFilter(); // Charger les catégories pour le filtre
@@ -1309,8 +1334,17 @@ function resetProductFilters() {
  * Mettre à jour les compteurs de produits
  */
 function updateProductCounts() {
-    document.getElementById('totalProductsCount').textContent = allProducts.length;
-    document.getElementById('visibleProductsCount').textContent = filteredProducts.length;
+    if (document.getElementById('totalProductsCount')) {
+        document.getElementById('totalProductsCount').textContent = allProducts.length;
+    }
+    if (document.getElementById('visibleProductsCount')) {
+        document.getElementById('visibleProductsCount').textContent = filteredProducts.length;
+    }
+    
+    // Sync dashboard stats if elements exist
+    if (document.getElementById('totalProducts')) {
+        document.getElementById('totalProducts').textContent = allProducts.length;
+    }
 }
 
 /**
@@ -1340,12 +1374,28 @@ function updateSearchInfo(searchTerm) {
 }
 
 /**
+ * Ouvrir l'aperçu d'une image dans un modal
+ */
+function openImagePreview(url) {
+    const modalImage = document.getElementById('previewModalImage');
+    if (modalImage && url) {
+        modalImage.src = url;
+        const modal = new bootstrap.Modal(document.getElementById('imagePreviewModal'));
+        modal.show();
+    }
+}
+
+/**
  * Afficher le tableau des produits (version améliorée)
  */
 function displayProductsTable(products) {
     const tbody = document.querySelector('#productsTable tbody');
+    if (!tbody) return;
     
-    if (products.length === 0) {
+    // Vider le tableau avant d'ajouter les produits (évite les doublons à l'affichage)
+    tbody.innerHTML = '';
+    
+    if (!products || products.length === 0) {
         tbody.innerHTML = `
             <tr>
                 <td colspan="6" class="text-center text-muted py-4">
@@ -1370,12 +1420,24 @@ function displayProductsTable(products) {
             stockIcon = 'bi-exclamation-triangle';
         }
         
+        // Sécurité pour l'image : éviter le texte "undefined" ou une URL cassée
+        let imageUrl = product.primary_image || product.image || '/public/images/placeholder.jpg';
+        if (!imageUrl || imageUrl.includes('undefined') || imageUrl === 'undefined') {
+            imageUrl = '/public/images/placeholder.jpg';
+        }
+        
         return `
             <tr>
                 <td>
-                    <img src="${product.image || '/images/placeholder.jpg'}" 
-                         alt="${product.name}" 
-                         class="product-image">
+                    <div class="product-image-container position-relative" style="cursor: pointer;" onclick="openImagePreview('${imageUrl}')" title="Cliquez pour agrandir">
+                        <img src="${imageUrl}" 
+                             alt="${product.name}" 
+                             class="product-image rounded"
+                             onerror="this.src='/public/images/placeholder.jpg'">
+                        <div class="product-image-overlay d-flex align-items-center justify-content-center">
+                            <i class="bi bi-zoom-in text-white"></i>
+                        </div>
+                    </div>
                 </td>
                 <td>
                     <div>
@@ -1399,6 +1461,9 @@ function displayProductsTable(products) {
                 </td>
                 <td>
                     <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-info" onclick="openImagePreview('${imageUrl}')" title="Aperçu">
+                            <i class="bi bi-eye"></i>
+                        </button>
                         <button class="btn btn-outline-primary" onclick="editProduct(${product.id})" title="Modifier">
                             <i class="bi bi-pencil"></i>
                         </button>
@@ -1496,7 +1561,7 @@ function displayCategoriesGrid() {
                 <div class="card h-100 category-card">
                     <div class="card-body text-center">
                         <div class="mb-3">
-                            <i class="${category.icon}" style="font-size: 3rem; color: #1ee98a;"></i>
+                            ${category.image ? `<img src="${category.image}" alt="${category.name}" style="max-height:70px;max-width:100px;object-fit:contain;">` : `<i class="${category.icon}" style="font-size: 3rem; color: #1ee98a;"></i>`}
                         </div>
                         <h5 class="card-title">${category.name}</h5>
                         <p class="card-text text-muted small">
@@ -1515,7 +1580,6 @@ function displayCategoriesGrid() {
             </div>
         `;
     });
-    
     grid.innerHTML = html;
 }
 
@@ -2354,9 +2418,9 @@ function generateReceiptHTML(order, orderItems) {
         </style>
     </head>
     <body>
-        <div class="header">
-            <img src="/logo1.png" alt="hérbilia" style="height: 50px; margin-bottom: 10px;">
-            <div class="store-name">hérbilia</div>
+            <div class="header">
+                <img src="/public/images/logo.png" alt="hérbilia" style="height: 50px; margin-bottom: 10px;">
+                <div class="store-name">hérbilia</div>
             <div class="store-info">
                 Soins & Beauté au Féminin - Qualité Premium<br>
                 Email: contact@herbilia.com | Tél: +212 6 00 00 00 00
@@ -2782,9 +2846,22 @@ function resetOrderFilters() {
 function updateOrderCounts() {
     // Compter seulement les commandes non-livrées pour la liste principale
     const nonDeliveredOrders = allOrders.filter(order => order.status !== 'delivered');
+    const pendingOrders = allOrders.filter(order => order.status === 'pending');
     
-    document.getElementById('totalOrdersCount').textContent = nonDeliveredOrders.length;
-    document.getElementById('visibleOrdersCount').textContent = filteredOrders.length;
+    if (document.getElementById('totalOrdersCount')) {
+        document.getElementById('totalOrdersCount').textContent = nonDeliveredOrders.length;
+    }
+    if (document.getElementById('visibleOrdersCount')) {
+        document.getElementById('visibleOrdersCount').textContent = filteredOrders.length;
+    }
+
+    // Sync dashboard stats if elements exist
+    if (document.getElementById('totalOrders')) {
+        document.getElementById('totalOrders').textContent = allOrders.length;
+    }
+    if (document.getElementById('pendingOrders')) {
+        document.getElementById('pendingOrders').textContent = pendingOrders.length;
+    }
 }
 
 /**
@@ -2818,7 +2895,8 @@ function updateOrderSearchInfo(searchTerm) {
  */
 function displayOrdersTable(orders) {
     const tbody = document.querySelector('#ordersTable tbody');
-    
+    // Vider le tableau avant d'ajouter les commandes (évite les doublons à l'affichage)
+    tbody.innerHTML = '';
     if (orders.length === 0) {
         tbody.innerHTML = `
             <tr>
@@ -2830,7 +2908,6 @@ function displayOrdersTable(orders) {
         `;
         return;
     }
-    
     tbody.innerHTML = orders.map(order => {
         // Déterminer la classe CSS pour le statut
         let statusClass = 'secondary';
@@ -3304,7 +3381,7 @@ function generateOrderPrintHTML(order) {
         </head>
         <body>
             <div class="header">
-                <img src="${window.location.origin}/logo1.png" alt="hérbilia" style="height: 80px; margin-bottom: 15px;">
+                <img src="${window.location.origin}/public/images/logo.png" alt="hérbilia" style="height: 80px; margin-bottom: 15px;">
                 <div class="company-name" style="color: #6a11cb;">hérbilia</div>
                 <div class="order-title">Facture - Commande #${order.id}</div>
                 <div>

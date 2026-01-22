@@ -1,0 +1,5 @@
+<!-- Placeholder SVG logo. Replace with your actual logo if needed. -->
+<svg width="100" height="40" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="40" fill="#4CAF50"/>
+  <text x="50" y="25" font-size="18" text-anchor="middle" fill="#fff" font-family="Arial">LOGO</text>
+</svg>

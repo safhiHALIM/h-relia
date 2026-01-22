@@ -190,7 +190,15 @@ function updateCategoriesDisplay() {
     const categoriesGrid = document.getElementById('categoriesGrid');
     if (categoriesGrid) {
         categoriesGrid.className = 'categories-grid-modern';
-        categoriesGrid.innerHTML = categories.map((category, index) => `
+        // Calculer le nombre de produits par catégorie
+        const productsByCategory = {};
+        products.forEach(p => {
+            if (!productsByCategory[p.category_id]) productsByCategory[p.category_id] = 0;
+            productsByCategory[p.category_id]++;
+        });
+        categoriesGrid.innerHTML = categories.map((category, index) => {
+            const itemCount = productsByCategory[category.id] || 0;
+            return `
             <div class="category-card-container" data-aos="fade-up" data-aos-delay="${index * 100}">
                 <div class="category-card-modern" data-category="${category.name}" onclick="filterByCategory(${category.id}, '${category.name}')">
                     ${category.image ? `
@@ -202,6 +210,9 @@ function updateCategoriesDisplay() {
                                 <i class="${category.icon}"></i>
                             </div>
                         </div>
+                        <div class="category-count-badge">
+                            <span>${itemCount}</span> items
+                        </div>
                     </div>
                     ` : `
                     <!-- Category Header (sans image) -->
@@ -210,16 +221,14 @@ function updateCategoriesDisplay() {
                             <i class="${category.icon}"></i>
                         </div>
                         <div class="category-count-badge">
-                            <span>${Math.floor(Math.random() * 50) + 10}</span> items
+                            <span>${itemCount}</span> items
                         </div>
                     </div>
                     `}
-                    
                     <!-- Category Content -->
                     <div class="category-content">
                         <h3 class="category-title">${category.name}</h3>
                         <p class="category-description">${category.description || 'Découvrez notre sélection de produits électroniques de qualité'}</p>
-                        
                         <!-- Category Stats -->
                         <div class="category-stats">
                             <div class="stat-item" title="Note moyenne">
@@ -232,7 +241,6 @@ function updateCategoriesDisplay() {
                             </div>
                         </div>
                     </div>
-                    
                     <!-- Category Action -->
                     <div class="category-action">
                         <div class="action-text">
@@ -242,8 +250,8 @@ function updateCategoriesDisplay() {
                     </div>
                 </div>
             </div>
-        `).join('');
-        
+            `;
+        }).join('');
         // Initialize AOS animations if available
         if (typeof AOS !== 'undefined') {
             AOS.refresh();

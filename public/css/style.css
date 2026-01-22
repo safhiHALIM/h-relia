@@ -5744,4 +5744,204 @@ button:focus,
     border-radius: var(--radius-sm);
 }
 
+/* ===== MVC STYLE SECTION (HORIZONTAL SCROLL) ===== */
+.mvc-section {
+    position: relative;
+    padding: 80px 0;
+    background: linear-gradient(180deg, var(--white) 0%, var(--secondary-light) 100%);
+    overflow: hidden;
+}
+
+.mvc-container-relative {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 50px;
+}
+
+.mvc-scroll-wrapper {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    padding: 10px 0 30px;
+    gap: 0;
+    scrollbar-width: none; /* Hide scrollbar for cleaner look */
+    -ms-overflow-style: none;
+}
+
+.mvc-scroll-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.mvc-card {
+    flex: 0 0 100%;
+    width: 100%;
+    background: var(--white);
+    border-radius: 30px;
+    box-shadow: 0 15px 45px rgba(232, 180, 188, 0.12);
+    padding: 40px 60px;
+    scroll-snap-align: center;
+    transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+    white-space: normal;
+    border: 1px solid rgba(232, 180, 188, 0.25);
+    display: flex;
+    flex-direction: column;
+    min-height: 350px;
+}
+
+.mvc-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--primary-light);
+    color: var(--accent-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.mvc-nav-btn:hover {
+    background: var(--accent-color);
+    color: var(--white);
+    box-shadow: 0 8px 20px rgba(201, 106, 125, 0.3);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.mvc-nav-btn.prev { left: -10px; }
+.mvc-nav-btn.next { right: -10px; }
+
+@media (max-width: 768px) {
+    .mvc-container-relative {
+        padding: 0 15px;
+    }
+    .mvc-card {
+        padding: 30px 20px;
+        min-height: auto;
+    }
+    .mvc-nav-btn {
+        display: none;
+    }
+}
+
+.mvc-card h4 {
+    color: var(--accent-color);
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0.8;
+}
+
+/* ===== MODERN FOOTER - HERBILIA THEME ===== */
+.footer {
+    background: linear-gradient(135deg, #2c1a1d 0%, #1a0f11 100%);
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+}
+
+.footer-logo-text {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    display: block;
+}
+
+.footer h5 {
+    color: var(--primary-color);
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    position: relative;
+    display: inline-block;
+}
+
+.footer h5::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 30px;
+    height: 2px;
+    background: var(--accent-color);
+}
+
+.footer-link {
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: block;
+    margin-bottom: 0.8rem;
+}
+
+.footer-link:hover {
+    color: var(--primary-color);
+    transform: translateX(5px);
+}
+
+.footer-social-link {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-right: 10px;
+}
+
+.footer-social-link:hover {
+    background: var(--primary-color);
+    color: #2c1a1d;
+    transform: translateY(-3px);
+}
+
+.contact-info-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.contact-info-item i {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+}
+
+.footer-bottom {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 20px 0;
+}
+
+
 
